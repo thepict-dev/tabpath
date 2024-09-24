@@ -218,15 +218,57 @@
 		where idx = #{idx}
 	</update>
 	
-	<select id="lecture_userinfo_list" resultType="pictVO">
-		select * from user_info
-	</select>
-	
+
 	
 	<delete id="board_delete" parameterType="pictVO">
 		delete from board_master_edu where idx = #{idx}
 	</delete>
 	
+	<select id="lecture_userinfo_list" resultType="pictVO">
+		select * from user_info
+	</select>
 	
+	
+	
+	
+	<select id="user_list" resultType="pictVO">
+		select * from user_table
+		<if test="search_text != null and search_text != '' ">
+			where (
+				name LIKE CONCAT('%', #{search_text}, '%') or
+				mobile LIKE CONCAT('%', #{search_text}, '%')
+			) 
+		</if>
+		order by reg_date desc
+	</select>
+	
+	<select id="user_list_one" resultType="pictVO">
+		select * from user_table
+		where idx = #{idx}
+	</select>
+	
+	<insert id="user_insert" parameterType="pictVO">
+		INSERT INTO user_table
+			(
+			 name, mobile, gender, birthday, reg_date, bus, seat
+			)
+		VALUES (
+			 #{name}, #{mobile}, #{gender}, #{birthday}, now(), #{bus}, #{seat}
+			  ) 
+	</insert>
+	
+	<update id="user_update" parameterType="pictVO">
+		update user_table
+		set 
+		name =#{name}, mobile=#{mobile},
+		gender =#{gender}, birthday=#{birthday},
+		bus =#{bus}, seat=#{seat},
+		reg_date = now()
+		where idx = #{idx}
+	</update>
+
+	<delete id="user_delete" parameterType="pictVO">
+		delete from user_table where idx = #{idx}
+	</delete>
 	
 </mapper>

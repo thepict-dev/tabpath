@@ -91,7 +91,17 @@ public interface PictService {
 
 	void board_delete(PictVO pictVO) throws Exception;
 
-	//void attendance_update(PictVO pictVO) throws Exception;
+	List<?> bus_list(PictVO pictVO) throws Exception;
+
+	List<?> user_list(PictVO pictVO) throws Exception;
+
+	PictVO user_list_one(PictVO pictVO) throws Exception;
+
+	void user_update(PictVO pictVO) throws Exception;
+
+	void user_insert(PictVO pictVO) throws Exception;
+
+	void user_delete(PictVO pictVO) throws Exception;
 
 
 }

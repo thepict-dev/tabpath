@@ -9,13 +9,13 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<c:import url="../main/header.jsp">
-    	<c:param name="pageTitle" value="게시글 리스트"/>
+    	<c:param name="pageTitle" value="사용자 리스트"/>
     </c:import>
     <body>
     	<div class="wrapper">
         	<%@include file="../main/navigation.jsp" %>
 			<main class="sub-container">
-				<!-- <h3 class="contents-title">게시글 리스트</h3> -->
+				<h3 class="contents-title">사용자 리스트</h3>
     			<div class="board-search">
 			    	<form action="" id="search_fm" name="search_fm" method="get" class="board-search-form">
 <%-- 			    		<label class="board-search-radio"><input type="radio" name="board_type" value="0" <c:if test="${pictVO.board_type eq '0' || pictVO.board_type eq null || pictVO.board_type eq undefined}"> checked </c:if> >전체</label> --%>

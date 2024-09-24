@@ -110,9 +110,50 @@ public class PictVO extends PictDefaultVO {
 	private String board_type;
 	private String news;
 	private String reg_date_for;
+	private String gender;
+	private String birthday;
+	private String bus;
+	private String seat;
+	private String sms_rand;
+	private String fairpath_id;
 	
 	
-	
+	public String getFairpath_id() {
+		return fairpath_id;
+	}
+	public void setFairpath_id(String fairpath_id) {
+		this.fairpath_id = fairpath_id;
+	}
+	public String getSms_rand() {
+		return sms_rand;
+	}
+	public void setSms_rand(String sms_rand) {
+		this.sms_rand = sms_rand;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+	public String getBus() {
+		return bus;
+	}
+	public void setBus(String bus) {
+		this.bus = bus;
+	}
+	public String getSeat() {
+		return seat;
+	}
+	public void setSeat(String seat) {
+		this.seat = seat;
+	}
 	public String getReg_date_for() {
 		return reg_date_for;
 	}

@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<c:import url="../main/header.jsp">
-    	<c:param name="pageTitle" value="2023 메타버스·XR 전문인력 양성 교육"/>
+    	<c:param name="pageTitle" value="TABPATH 사용자등록"/>
     </c:import>
     <body>
     	<div class="wrapper">
@@ -16,7 +16,7 @@
         		<section class="main-box recruit" id="main-recruit">
         			<div class="main-container">
         				<h2 class="main-title">
-	        				<span class="desc">2023 메타버스·XR 전문인력 양성 교육</span>
+	        				<span class="desc">TABPATH 사용자등록</span>
 	        				모집안내
 	        			</h2>
 	        			<div class="main-item">

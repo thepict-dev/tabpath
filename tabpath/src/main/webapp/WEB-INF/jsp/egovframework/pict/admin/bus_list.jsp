@@ -9,18 +9,18 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<c:import url="../main/header.jsp">
-    	<c:param name="pageTitle" value="게시글 리스트"/>
+    	<c:param name="pageTitle" value="버스탑승 리스트"/>
     </c:import>
     <body>
     	<div class="wrapper">
         	<%@include file="../main/navigation.jsp" %>
 			<main class="sub-container">
-				<!-- <h3 class="contents-title">게시글 리스트</h3> -->
+				<h3 class="contents-title">버스탑승 리스트</h3>
     			<div class="board-search">
 			    	<form action="" id="search_fm" name="search_fm" method="get" class="board-search-form">
-			    		<label class="board-search-radio"><input type="radio" name="board_type" value="0" <c:if test="${pictVO.board_type eq '0' || pictVO.board_type eq null || pictVO.board_type eq undefined}"> checked </c:if> >전체</label>
-				    	<label class="board-search-radio"><input type="radio" name="board_type" value="1" <c:if test="${pictVO.board_type eq '1'}"> checked </c:if> >게시글</label>
-						<label class="board-search-radio"><input type="radio" name="board_type" value="2" <c:if test="${pictVO.board_type eq '2'}"> checked </c:if> >뉴스</label>
+<%-- 			    		<label class="board-search-radio"><input type="radio" name="board_type" value="0" <c:if test="${pictVO.board_type eq '0' || pictVO.board_type eq null || pictVO.board_type eq undefined}"> checked </c:if> >전체</label> --%>
+<%-- 				    	<label class="board-search-radio"><input type="radio" name="board_type" value="1" <c:if test="${pictVO.board_type eq '1'}"> checked </c:if> >게시글</label> --%>
+<%-- 						<label class="board-search-radio"><input type="radio" name="board_type" value="2" <c:if test="${pictVO.board_type eq '2'}"> checked </c:if> >뉴스</label> --%>
 						<div class="board-search-input">
 							<input type="text" id="search_text" name="search_text" value="${pictVO.search_text}" class="input" placeholder="검색어를 입력하세요.">
 				    		<button type="button" onclick="search();" title="검색하기" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
