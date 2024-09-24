@@ -54,19 +54,15 @@
 			</form>
 		</div>
 		<script>
-			$("input[name='board_type']:radio").change(function () {
-		        $("#search_fm").attr("action", "/admin/board_list.do");
-				$("#search_fm").submit();
-			});
 
 			function board_mod(idx){
-				location.href= "/admin/board_register.do?idx="+idx;
+				location.href= "/admin/user_register.do?idx="+idx;
 			}		
 			function board_insert(){
-				location.href= "/admin/board_register.do";
+				location.href= "/admin/user_register.do";
 			}		
 			function search(){
-				$("#search_fm").attr("action", "/admin/board_list.do");
+				$("#search_fm").attr("action", "/admin/user_list.do");
 				$("#search_fm").submit();
 			}
 		</script>

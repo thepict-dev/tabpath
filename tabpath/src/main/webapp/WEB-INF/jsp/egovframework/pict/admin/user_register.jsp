@@ -35,15 +35,10 @@
 								</td>
 							</tr>
 							<tr>
-								<th class="title">성별*</th>
-								<td>
-									<input type="text" id="gender" name="gender" value="${pictVO.gender}" class="board-write-input">
-								</td>
-							</tr>
-							<tr>
 								<th class="title">생년월일*</th>
 								<td>
 									<input type="text" id="birthday" name="birthday" value="${pictVO.birthday}" class="board-write-input">
+									<input type="text" id="birthday_1" name="birthday_1" value="${pictVO.birthday_1}" class="board-write-input" maxlength="1">
 								</td>
 							</tr>
 							<tr>
@@ -93,9 +88,32 @@
 		}
 		function button1_click() {
 			var name = $('#name').val();
+			var mobile = $('#mobile').val();
+			var name = $('#name').val();
 			
 			var saveType = $('#saveType').val();
 			
+			if (name == "" || name == undefined) {
+				window.alert("이름을 입력해주세요.");
+				$('#name').focus();
+				return false;
+			}
+			if (mobile == "" || mobile == undefined) {
+				window.alert("연락처를 입력해주세요.");
+				$('#mobile').focus();
+				return false;
+			}
+
+			if (name == "" || name == undefined) {
+				window.alert("이름을 입력해주세요.");
+				$('#name').focus();
+				return false;
+			}
+			if (name == "" || name == undefined) {
+				window.alert("이름을 입력해주세요.");
+				$('#name').focus();
+				return false;
+			}
 			if (name == "" || name == undefined) {
 				window.alert("이름을 입력해주세요.");
 				$('#name').focus();

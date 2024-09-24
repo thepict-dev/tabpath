@@ -103,5 +103,13 @@ public interface PictService {
 
 	void user_delete(PictVO pictVO) throws Exception;
 
+	PictVO get_register_person_info(PictVO pictVO) throws Exception;
+
+	PictVO get_person_info(PictVO pictVO) throws Exception;
+
+	PictVO get_seat_info(PictVO pictVO) throws Exception;
+
+	void update_user_bus_info(PictVO pictVO) throws Exception;
+
 
 }

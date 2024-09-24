@@ -7,7 +7,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.PasswordAuthentication;
@@ -18,13 +20,17 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pict_admin.service.AdminService;
 import pict_admin.service.AdminVO;
 import pict_admin.service.PictService;
 import pict_admin.service.PictVO;
+import org.apache.commons.codec.binary.Base64;
 
 @Controller
 public class pictController {
@@ -44,13 +50,48 @@ public class pictController {
 	}
 	@RequestMapping(value = "/mypage_login.do")
 	public String mypage_login(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		String sessions = (String)request.getSession().getAttribute("id");	
 		
-		return "pict/main/mypage_login";
+		if(sessions == null || sessions == "null") {
+			return "pict/main/mypage_login";
+		}
+		else {
+			//나중에 여기 계정별로 리다이렉트 분기처리
+			return "redirect:/mypage.do";
+			
+		}
 	}
 	@RequestMapping(value = "/login_action.do")
-	public String login_action(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+	public String login_action(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		String inpuName = pictVO.getName();
+		String inputMobile = pictVO.getMobile();
 		
-		return "pict/main/mypage_login";
+		pictVO = pictService.get_register_person_info(pictVO);
+
+		if (pictVO != null && pictVO.getId() != null && !pictVO.getId().equals("")) {
+			String name = pictVO.getName();
+			String mobile = pictVO.getMobile();
+			
+			if(inpuName.equals(name) && inputMobile.equals(mobile)) {
+				request.getSession().setAttribute("id", pictVO.getIdx());
+				
+				return "redirect:/mypage.do";
+				
+			}
+			else {
+				model.addAttribute("message", "입력하신 정보가 일치하지 않습니다.");
+				model.addAttribute("retType", ":location");
+				model.addAttribute("retUrl", "/mypage_login.do");
+				return "pict/main/message";
+			}
+		}
+		else {
+			model.addAttribute("message", "입력하신 정보가 일치하지 않습니다.");
+			model.addAttribute("retType", ":location");
+			model.addAttribute("retUrl", "/mypage_login.do");
+			return "pict/main/message";
+		}
+		
 	}
 	@RequestMapping(value = "/mypage.do")
 	public String mypage(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
@@ -110,7 +151,6 @@ public class pictController {
 		model.addAttribute("pictVO", pictVO);
 		return "pict/admin/user_register";
 	}
-	
 	@RequestMapping(value = "/admin/user_save.do")
 	public String user_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request) throws Exception {
 		if(pictVO.getSaveType() != null && pictVO.getSaveType().equals("update")) {
@@ -127,17 +167,21 @@ public class pictController {
 				conn.setDoOutput(true);// 서버에서 받을 값이 있다면 true
 				
 				JSONObject obj_param = new JSONObject();
-				obj_param.put("EVENT_IDX", "5017");	//행사코드 고정
+				obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
 				obj_param.put("VISITOR_IDX", pictVO.getFairpath_id());
 				
 				String bus_info = "";
 				bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat();
 				
-				obj_param.put("INFO9", bus_info);
+				String gender = "1";
+				if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
+				
 				obj_param.put("NAME", pictVO.getName());
 				obj_param.put("TEL", pictVO.getMobile());
-				obj_param.put("GENDER", pictVO.getGender());
-				obj_param.put("BIRTHDAY", pictVO.getBirthday());
+				obj_param.put("GENDER", gender);
+				obj_param.put("INFO9", bus_info);
+				obj_param.put("INFO10", pictVO.getBirthday());
+				obj_param.put("OPTION_IDX", "5019");
 
 				//서버에 데이터 전달
 				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
@@ -182,9 +226,7 @@ public class pictController {
 			
 		}
 		else {
-			System.out.println("1111111111111111111");
 			try {
-				System.out.println("222222222222222");
 				URL url = new URL("https://api.fairpass.co.kr/fsApi/VisitorInsert");
 				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 				
@@ -196,18 +238,19 @@ public class pictController {
 				conn.setDoOutput(true);// 서버에서 받을 값이 있다면 true
 				
 				JSONObject obj_param = new JSONObject();
-				obj_param.put("EVENT_IDX", "5017");	//행사코드 고정
+				obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
 				
-				String bus_info = "";
-				bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat();
+				//String bus_info = "";
+				//bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat();
 				
-				obj_param.put("INFO9", bus_info);
+				String gender = "1";
+				if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
 				obj_param.put("NAME", pictVO.getName());
 				obj_param.put("TEL", pictVO.getMobile());
-				obj_param.put("GENDER", pictVO.getGender());
-				obj_param.put("BIRTHDAY", pictVO.getBirthday());
-				obj_param.put("OPTION_IDX", "1645");
-				System.out.println("33333333333333333");
+				obj_param.put("GENDER", gender);
+				//obj_param.put("INFO9", bus_info);
+				obj_param.put("INFO10", pictVO.getBirthday());
+				obj_param.put("OPTION_IDX", "5019");
 				
 				//서버에 데이터 전달
 				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
@@ -225,8 +268,9 @@ public class pictController {
 				}
 				JSONObject obj = new JSONObject(sb.toString()); // json으로 변경 (역직렬화)
 				int state_code = obj.getInt("resultCode");
+				System.out.println(obj);
 				if(state_code != 0) {
-					System.out.println(obj);
+					
 					model.addAttribute("message", "저장 중 오류가 발생하였습니다.");
 					model.addAttribute("retType", ":location");
 					model.addAttribute("retUrl", "/admin/user_list.do");
@@ -251,28 +295,124 @@ public class pictController {
 		}
 		
 	}
-	
 	@RequestMapping(value = "/admin/user_delete.do")
 	public String user_delete(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request) throws Exception {
-		String userAgent = request.getHeader("user-agent");
-		boolean mobile1 = userAgent.matches( ".*(iPhone|iPod|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mini|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson).*");
-		boolean mobile2 = userAgent.matches(".*(LG|SAMSUNG|Samsung).*"); 
-		if (mobile1 || mobile2) {
-		    //여기 모바일일 경우
-			model.addAttribute("intype", "mobile");
+		try {
+			URL url = new URL("https://api.fairpass.co.kr/fsApi/VisitorDelete");
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			
+			conn.setRequestMethod("POST"); // http 메서드
+			conn.setRequestProperty("Content-Type", "application/json"); // header Content-Type 정보
+			conn.setRequestProperty("ApiKey", " rioE2lpgWGInf2Gd7XF9cOCDvqXGUzKXYPrqBCW"); // header의 auth 정보
+			
+			conn.setDoInput(true); // 서버에 전달할 값이 있다면 true
+			conn.setDoOutput(true);// 서버에서 받을 값이 있다면 true
+			
+			JSONObject obj_param = new JSONObject();
+			obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
+			obj_param.put("VISITOR_IDX", pictVO.getFairpath_id());
+
+			//서버에 데이터 전달
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+			bw.write(obj_param.toString()); // 버퍼에 담기
+			bw.flush(); // 버퍼에 담긴 데이터 전달
+			bw.close();
+			
+			// 서버로부터 데이터 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			
+			while((line = br.readLine()) != null) { // 읽을 수 있을 때 까지 반복
+				sb.append(line);
+			}
+			JSONObject obj = new JSONObject(sb.toString()); // json으로 변경 (역직렬화)
+			int state_code = obj.getInt("resultCode");
+			if(state_code != 0) {
+				model.addAttribute("message", "삭제 중 오류가 발생하였습니다.");
+				model.addAttribute("retType", ":location");
+				model.addAttribute("retUrl", "/user/user_list.do");
+				return "pict/main/message";
+			}
+			else {
+				pictService.user_delete(pictVO);
+				model.addAttribute("message", "정상적으로 삭제되었습니다.");
+				model.addAttribute("retType", ":location");
+				model.addAttribute("retUrl", "/admin/user_list.do");
+				return "pict/main/message";
+			}
 		}
-		else {
-			model.addAttribute("intype", "pc");
+		catch(Exception e) {
+			System.out.println(e);
+			model.addAttribute("message", "삭제 중 오류가 발생하였습니다.");
+			model.addAttribute("retType", ":location");
+			model.addAttribute("retUrl", "/admin/user_list.do");
+			return "pict/main/message";
 		}
-		pictService.user_delete(pictVO);
-		
-		model.addAttribute("message", "정상적으로 삭제되었습니다.");
-		model.addAttribute("retType", ":location");
-		model.addAttribute("retUrl", "/admin/user_list.do");
-		return "pict/main/message";
 		
 	}
 
+	//버스입장 QR체크 페이지
+	@RequestMapping(value = "/admin/intro_bus.do")
+	public String intro_bus(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		String idx = request.getSession().getAttribute("idx").toString();
+		pictVO.setIdx(Integer.parseInt(idx));
+		pictVO = pictService.get_person_info(pictVO);
+		model.addAttribute("pictVO", pictVO);
+		
+		return "pict/admin/bus_list";
+	}
+	@RequestMapping(value = "/qr_insert.do", method= RequestMethod.POST)
+	@ResponseBody
+	public String user_invest_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+		
+		String idx = param.get("idx").toString();
+		pictVO.setIdx(Integer.parseInt(idx));
+		
+		pictVO = pictService.get_person_info(pictVO);
+		
+		//이러면 이미 좌석정보 들어온 경우
+		if(pictVO != null && pictVO.getBus() != null && pictVO.getSeat() != null) {
+			return "already";
+		}
+		else {
+			pictVO = pictService.get_seat_info(pictVO);
+			int bus = Integer.parseInt(pictVO.getBus());
+			int seat = Integer.parseInt(pictVO.getSeat());
+			int target_bus = 0;
+			int target_seat = 0;
+			
+			if(seat == 45) {
+				target_bus = bus + 1;
+				target_seat = 1;
+			}
+			else {
+				target_bus = bus;
+				target_seat = seat + 1;
+			}
+			pictVO.setIdx(Integer.parseInt(idx));
+			pictVO.setBus(target_bus+"");
+			pictVO.setSeat(target_seat+"");
+			pictService.update_user_bus_info(pictVO);
+			
+			return target_bus+"@@"+target_seat;
+		}
+		
+	}
+	
+	//메소드
+	public static String encryptPassword(String password, String id) throws Exception {
+		if (password == null) return "";
+		if (id == null) return ""; // KISA 보안약점 조치 (2018-12-11, 신용호)
+		byte[] hashValue = null; // 해쉬값
+	
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.reset();
+		md.update(id.getBytes());
+		hashValue = md.digest(password.getBytes());
+	
+		return new String(Base64.encodeBase64(hashValue));
+    }
 
     
 }

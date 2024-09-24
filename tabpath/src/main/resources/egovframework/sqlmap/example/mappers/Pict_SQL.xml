@@ -250,10 +250,10 @@
 	<insert id="user_insert" parameterType="pictVO">
 		INSERT INTO user_table
 			(
-			 name, mobile, gender, birthday, reg_date, bus, seat
+			 name, mobile, birthday_1, birthday, reg_date, bus, seat, sms_rand, use_at, fairpath_id
 			)
 		VALUES (
-			 #{name}, #{mobile}, #{gender}, #{birthday}, now(), #{bus}, #{seat}
+			 #{name}, #{mobile}, #{birthday_1}, #{birthday}, now(), #{bus}, #{seat}, #{sms_rand}, #{use_at}, #{fairpath_id}
 			  ) 
 	</insert>
 	
@@ -261,14 +261,38 @@
 		update user_table
 		set 
 		name =#{name}, mobile=#{mobile},
-		gender =#{gender}, birthday=#{birthday},
+		birthday_1 =#{birthday_1}, birthday=#{birthday},
 		bus =#{bus}, seat=#{seat},
 		reg_date = now()
+		<if test="use_at != null and use_at != '' ">
+			use_at = #{use_at}
+		</if>
 		where idx = #{idx}
 	</update>
 
 	<delete id="user_delete" parameterType="pictVO">
 		delete from user_table where idx = #{idx}
 	</delete>
+	
+	<select id="get_register_person_info" resultType="pictVO">
+		select * from user_table where name = #{name} and mobile =#{mobile}
+	</select>
+	
+	<select id="get_person_info" resultType="pictVO">
+		select * from user_table where idx = #{idx}
+	</select>
+	
+	<select id="get_seat_info" resultType="pictVO">
+		select * 
+		from user_table
+		order by cast(bus as unsigned) desc, cast(seat as unsigned) desc
+		limit 1 offset 0
+	</select>
+	
+	<update id="update_user_bus_info" parameterType="pictVO">
+		update user_table
+		set bus = #{bus}, seat = #{seat}
+		where idx= #{idx}
+	</update>
 	
 </mapper>

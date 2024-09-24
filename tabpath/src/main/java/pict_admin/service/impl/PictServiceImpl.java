@@ -252,6 +252,30 @@ public class PictServiceImpl extends EgovAbstractServiceImpl implements PictServ
 		pictMapper.user_delete(pictVO);
 	}
 
+	@Override
+	public PictVO get_register_person_info(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		return pictMapper.get_register_person_info(pictVO);
+	}
+
+	@Override
+	public PictVO get_person_info(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		return pictMapper.get_person_info(pictVO);
+	}
+
+	@Override
+	public PictVO get_seat_info(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		return pictMapper.get_seat_info(pictVO);
+	}
+
+	@Override
+	public void update_user_bus_info(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		pictMapper.update_user_bus_info(pictVO);
+	}
+
 
 
 	

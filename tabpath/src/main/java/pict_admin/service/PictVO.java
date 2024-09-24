@@ -116,8 +116,15 @@ public class PictVO extends PictDefaultVO {
 	private String seat;
 	private String sms_rand;
 	private String fairpath_id;
+	private String birthday_1;
 	
 	
+	public String getBirthday_1() {
+		return birthday_1;
+	}
+	public void setBirthday_1(String birthday_1) {
+		this.birthday_1 = birthday_1;
+	}
 	public String getFairpath_id() {
 		return fairpath_id;
 	}
