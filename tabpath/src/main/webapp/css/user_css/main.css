@@ -1,0 +1,75 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+.container h1{
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+    width: 235px;
+    margin: 182px 0;
+}
+.container h1 img{
+    width: 100%;
+}
+.container h1 p{
+    color: #212121;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 100%; /* 20px */
+    letter-spacing: -1px;
+}
+
+.loginBottom{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 100px;
+    width: 100%;
+}
+.buttonContainer.login{
+    flex-direction: column;
+    align-items: center;
+    row-gap: 12px;
+    max-width: 300px;
+}
+.buttonContainer.login a{
+    color: var(--WH, #FFF);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 100%; /* 15px */
+    letter-spacing: -0.75px;
+}
+.personInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 16px;
+    text-align: center;
+}
+.personInfo p{
+    color: var(--grey-400);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 100%; /* 14px */
+    letter-spacing: -0.7px;
+}
+.personDesc{
+    display: flex;
+    column-gap: 4px;
+}
+.personDesc a{
+    display: inline-block;
+    width: 114px;
+    padding: 10px;
+    color: var(--GREY-grey-400, #A2ABB5);
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 100%; /* 14px */
+    letter-spacing: -0.7px;
+    text-decoration-line: underline;
+}

@@ -1,0 +1,206 @@
+@import url('https://webfontworld.github.io/sunn/SUIT.css');
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&display=swap');
+
+:root {
+    --fn-suit: 'SUIT';
+    --fn-ald: "Aldrich", sans-serif;
+    --grey-50: #f3f5f6;
+    --grey-100: #dbdee2;
+    --grey-200: #cacfd4;
+    --grey-300: #b1b9c1;
+    --grey-400: #a2abb5;
+    --grey-500: #8b96a2;
+    --grey-600: #7e8993;
+    --grey-700: #636b73;
+    --grey-800: #4c5359;
+    --grey-900: #3a3f44;
+    --navy-color: #171C61;
+    --gold-color: #A48B78;
+}
+
+body{
+    position: relative;
+    font-family: var(--fn-suit);
+    color: #000;
+}
+body.no-scroll {
+    overflow: hidden;
+}
+
+button{
+    font-family: var(--fn-suit);
+}
+
+.blind {
+    width: 0;
+    height: 0;
+    text-indent: -9999px;
+    padding: 0;
+    margin: 0;
+    visibility: hidden;
+}
+
+.mb{
+    display: none;
+}
+@media all and (max-width : 1024px){
+    .pc{
+        display: none;
+    }
+    .mb{
+        display: block;
+    }
+}
+
+/* button */
+.buttonContainer{
+    display: flex;
+    column-gap: 11px;
+    width: 100%;
+}
+.buttonContainer.app{
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 16px 20px;
+    background-color: #fff;
+}
+.buttonContainer a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    border-radius: 6px;
+    font-size: 15px;
+    letter-spacing: -0.75px;
+}
+.buttonContainer a.bk{
+    background: var(--BL, #000);
+}
+.buttonContainer a.bl{
+    border-radius: 6px;
+    background: #1363C3;
+}
+.buttonContainer a.bl.my{
+    color: #fff;
+}
+.buttonContainer a.wt{
+    font-size: 14px;
+    border: 1px solid var(--grey-50);
+}
+.buttonContainer a.gr{
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--grey-200);
+    background: var(--grey-500);
+    color: var(--grey-100);
+    pointer-events: none;
+}
+.buttonContainer a.gr.active{
+    color: #fff;
+    border: 1px solid #1363C3;
+    background: #1363C3;
+    pointer-events: all;
+}
+
+/* container */
+.inputBox{
+    width: 100%;
+}
+
+/* inputs */
+input{
+    box-sizing: border-box;
+    font-family: var(--fn-suit);
+}
+.inputCaption{
+    margin-bottom: 6px;
+    color: var(--grey-600);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%; /* 19.6px */
+    letter-spacing: -0.7px;
+}
+input[type=text], input[type=password]{
+    width: 100%;
+    padding: 20px;
+    color: var(--BL, #000);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 100%; /* 20px */
+    letter-spacing: -1px;
+    border: 0;
+    border-bottom: 1px solid var(--grey-200);
+    box-sizing: border-box;
+}
+input[type=text]::placeholder, input[type=password]::placeholder{
+    color: var(--grey-400);
+    font-family: var(--fn-suit);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 100%; /* 18px */
+    letter-spacing: -1px;
+}
+input[type=text]:focus, input[type=password]:focus{
+    outline: 0;
+    border-bottom: 1px solid var(--grey-500);
+}
+
+
+/* checkbox */
+.checkInputBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 8px;
+    width: 100%;
+    padding: 10px 0;
+}
+input[type=checkbox] {
+    /* display:none; */
+}
+input.checkOnly[type="checkbox"]{
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    border-radius: 50%;
+    appearance: none;
+    cursor: pointer;
+    background-image: url('/img/user_img/uncheck-grey.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center center;
+}
+input.checkOnly[type="checkbox"]:checked {
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-image: url('/img/user_img/checked-grey.png');
+    background-size: 100%;
+    background-position: center center;
+}
+.checkInputBox label{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 100%; /* 14px */
+    letter-spacing: -0.7px;
+    text-decoration-line: underline;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background: #666; 
+}
+::-webkit-scrollbar {
+    width: 5px;
+}
+@media all and (max-width : 1024px){
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}

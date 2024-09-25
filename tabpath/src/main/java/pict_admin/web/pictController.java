@@ -197,6 +197,17 @@ public class pictController {
 		
 		return "pict/main/mypage";
 	}
+
+	@RequestMapping(value = "/apply.do")
+	public String apply(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		
+		return "pict/main/apply";
+	}
+	@RequestMapping(value = "/mypage_tap.do")
+	public String mypage_tap(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		
+		return "pict/main/mypage_tap";
+	}
 	
 	@RequestMapping(value = "/admin/bus_list.do")
 	public String bus_list(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {

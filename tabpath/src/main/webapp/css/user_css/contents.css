@@ -1,0 +1,396 @@
+.contentTop{
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+    width: 100%;
+    height: 48px;
+    padding: 12px 20px;
+}
+.contentTop a{
+    display: block;
+    width: 24px;
+    height: 24px;
+}
+.contentTop a img{
+    width: 100%;
+}
+.contentTop p{
+    color: var(--BL, #000);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 100%; /* 16px */
+    letter-spacing: -0.64px;
+}
+.contentTop.my p{
+    color: var(--BL, #000);
+    font-family: SUIT;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%; /* 24px */
+    letter-spacing: -0.96px;
+}
+.contentBottom{
+    width: 100%;
+    height: calc(100% - 48px);
+    overflow-y: auto;
+}
+
+.contentBottom.app{
+    padding: 0 20px;
+    overflow-y: unset;
+}
+.progress{
+    position: relative;
+    width: 100%;
+    height: 3px;
+    margin: 20px 0 13px 0;
+    border-radius: 999px;
+    overflow: hidden;
+}
+.proInner{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1363C3;
+}
+.contentBottom.app h2{
+    color: var(--BL, #000);
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 140%; /* 56px */
+    letter-spacing: -3.2px;
+}
+.appContainer{
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+    width: 100%;
+    height: calc(100% - 200px);
+    margin-top: 64px;
+    overflow-y: auto;
+}
+
+.inputButton{
+    position: relative;
+}
+.inputButton.verify{
+    display: none;
+}
+.inputButton a{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    display: block;
+    padding: 8px;
+    color: var(--BL, #000);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 100%; /* 14px */
+    border-radius: 8px;
+    border: 1px solid var(--grey-50);
+    background: var(--WH, #FFF);
+}
+.inputButton p{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 100%; /* 14px */
+}
+.inputButton p.sec{
+    color: var(--grey-500);
+}
+.inputButton p.done{
+    display: none;
+    color: #1363C3;
+}
+
+.inputButton.verify.show{
+    display: block;
+}
+.inputButton.verify.active p.sec{
+    display: none;
+}
+.inputButton.verify.active p.done{
+    display: block;
+    color: #1363C3;
+}
+.inputButton.verify.active #verify{
+    color: #1363C3;
+}
+
+
+.birthInput{
+    display: flex;
+    align-items: center;
+    column-gap: 2px;
+    color: var(--grey-400);
+}
+.birthInput span{
+    font-size: 18px;
+}
+.birthInput input{
+    width: calc(50% - 6px);
+    font-size: 18px;
+}
+.birthInput label{
+    display: block;
+    position: relative;
+    width: calc(50% - 6px);
+}
+.birthInput label input{
+    width: 100%;
+}
+.birthInput label::after{
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    content: "●●●●●●";
+    display: inline-block;
+    color: var(--grey-grey-500, #8B96A2);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 100%; /* 18px */
+}
+
+.comment {
+    width: 100%;
+    height: 26px;
+    background: #F5F5F5;
+    overflow: hidden;
+    position: relative;
+}
+
+.rolling-text {
+    position: absolute;
+    white-space: nowrap;
+    color: #C7C7C7;
+    font-family: SUIT;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 26px; /* comment의 height와 동일하게 설정 */
+    letter-spacing: -0.7px;
+    animation: rolling 15s linear infinite;
+}
+
+@keyframes rolling {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.contentBottom.my{
+    width: 100%;
+    height: calc(100% - 74px);
+    overflow-y: auto;
+    padding: 7px 20px 0 20px;
+}
+.contentBottom.my h2{
+    color: var(--BL, #000);
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 140%; /* 56px */
+    letter-spacing: -3.2px;
+}
+
+.qrContainer{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 28px;
+    margin: 48px 0 12px 0;
+    border-radius: 20px;
+    background: #F5F5F5;
+    overflow: hidden;
+}
+.qrContainer img{
+    max-width: 298px;
+    width: 100%;
+}
+.cancelContainer{
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.80);
+    opacity: 0;
+    transition: all .2s;
+}
+.cancelContainer.active{
+    opacity: 1;
+    z-index: 2;
+}
+.cancelContainer a{
+    display: block;
+    padding: 18px 30px;
+    color: var(--WH, #FFF);
+    font-family: SUIT;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 100%; /* 24px */
+    border-radius: 8px;
+    border: 1px solid var(--WH, #FFF);
+    background: rgba(255, 255, 255, 0.40);
+}
+
+.entryContainer{
+    display: flex;
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid #D9D9D9;
+    background: var(--WH, #FFF);
+    overflow: hidden;
+}
+.entryTexts{
+    width: calc(100% - 98px);
+    padding: 23px 22px;
+    background: #1363C3;
+}
+.entryTexts p{
+    margin-bottom: 14px;
+    color: var(--WH, #FFF);
+    font-family: SUIT;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%; /* 33.6px */
+    letter-spacing: -1.92px;
+}
+.entryTexts p span{
+    display: block;
+    font-weight: 800;
+}
+.entryTexts > span{
+    color: rgba(255, 255, 255, 0.50);
+    font-family: SUIT;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 14px */
+    letter-spacing: -1.12px;
+}
+.entryNumber{
+    width: 98px;
+    padding: 23px 13px;
+}
+.entryNumber p{
+    margin-bottom: 14px;
+    color: #424242;
+    font-family: SUIT;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%; /* 33.6px */
+    letter-spacing: -1.92px;
+}
+.entryNumber p span{
+    display: block;
+    color: #1363C3;
+    font-weight: 700;
+}
+.entryNumber > span{
+    color: #1363C3;
+    font-family: SUIT;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%; /* 14px */
+    letter-spacing: -1.12px;
+}
+
+.cancelModal{
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 5;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 20px;
+    background: rgba(0, 0, 0, 0.80);
+}
+.cancelModal.active{
+    display: flex;
+}
+.cancelInner{
+    width: 100%;
+    padding: 24px 16px 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--GREY-grey-100, #DBDEE2);
+    background: var(--WH, #FFF);
+}
+.cancelInner p{
+    color: var(--bk, var(--BL, #000));
+    font-family: SUIT;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%; /* 20px */
+    letter-spacing: -1px;
+}
+.cancelInner span{
+    display: block;
+    margin: 12px 0 20px 0;
+    color: var(--GREY-grey-500, #8B96A2);
+    font-family: SUIT;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%; /* 22.4px */
+    letter-spacing: -0.8px;
+}
+
+.qrContainer.tap{
+    overflow: visible;
+}
+.seatNumber{
+    position: absolute;
+    left: 50%;
+    top: -30px;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 8px;
+    width: 227px;
+    height: 60px;
+    border-radius: 8px;
+    background: #1363C3;
+}
+.seatNumber p{
+    padding: 10px;
+    color: #AFCCEF;
+    font-family: SUIT;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 24px */
+    letter-spacing: -1.2px;
+}
+.seatNumber p:last-of-type{
+    color: var(--WH, #FFF);
+    font-weight: 900;
+}
