@@ -276,6 +276,24 @@ public class PictServiceImpl extends EgovAbstractServiceImpl implements PictServ
 		pictMapper.update_user_bus_info(pictVO);
 	}
 
+	@Override
+	public void sms_update(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		pictMapper.sms_update(pictVO);
+	}
+
+	@Override
+	public PictVO sms_select(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		return pictMapper.sms_select(pictVO);
+	}
+
+	@Override
+	public void register_cancel(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		pictMapper.register_cancel(pictVO);
+	}
+
 
 
 	

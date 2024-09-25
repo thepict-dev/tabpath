@@ -275,7 +275,7 @@
 	</delete>
 	
 	<select id="get_register_person_info" resultType="pictVO">
-		select * from user_table where name = #{name} and mobile =#{mobile}
+		select * from user_table where name = #{name} and mobile =#{mobile} and verify = 'Y'
 	</select>
 	
 	<select id="get_person_info" resultType="pictVO">
@@ -301,4 +301,25 @@
 		where bus = #{bus}
 		order by cast(seat as unsigned) asc
 	</select>
+	
+
+	<update id="sms_update" parameterType="pictVO">
+		update user_table
+		set verify = "Y"
+		where name = #{name} and mobile = #{mobile}
+	</update>
+	
+	<select id="sms_select" resultType="pictVO">
+		select * from user_table
+		where name = #{name} and mobile =#{mobile}
+	</select>
+	
+	
+	<update id="register_cancel" parameterType="pictVO">
+		update user_table
+		set verify = "C"
+		where idx = #{idx}
+	</update>
+	
+	
 </mapper>

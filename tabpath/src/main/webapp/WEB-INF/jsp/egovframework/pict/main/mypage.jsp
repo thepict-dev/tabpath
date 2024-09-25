@@ -3,11 +3,11 @@
 <%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <!DOCTYPE html>
 <html lang="ko">
 	<c:import url="./include/head.jsp">
-    	<c:param name="pageTitle" value="TABPATH 사용자등록"/>
+    	<c:param name="pageTitle" value="TAPPASS 사용자등록"/>
     </c:import>
     <body>
         <div class="container login">
@@ -20,7 +20,7 @@
 	        <div class="contentBottom my">
 	            <h2>인증이<br>완료되었습니다</h2>
 	            <div class="qrContainer">
-	                <img src="/user_img/test-qr.png" alt="">
+	                <div class="qrInner" id="qr_img"></div>
 	                <div class="cancelContainer">
 	                    <a href="#lnk">참여취소</a>
 	                </div>
@@ -31,7 +31,7 @@
 	                    <span>이 응모권은 캡처해서 사용하실 수 없습니다</span>
 	                </div>
 	                <div class="entryNumber">
-	                    <p>No.<span>1234</span></p>
+	                    <p>No.<span>${pictVO.idx}</span></p>
 	                    <span>행사당일사용</span>
 	                </div>
 	            </div>
@@ -44,11 +44,29 @@
 	                취소시 재등록은 불가해요.</span>
 	            <div class="buttonContainer">
 	                <a href="#lnk" class="wt close">닫기</a>
-	                <a href="#lnk" class="bl my">참여 취소</a>
+	                <a href="#lnk" class="bl my" onclick="fn_cancel('${pictVO.idx}')">참여 취소</a>
 	            </div>
 	        </div>
 	    </div>
+	    <form action="" id="register" name="register" method="post" enctype="multipart/form-data">
+	    	<input type="hidden" id="idx" name="idx">
+	    </form>
 	    <script>
+	    	function fn_cancel(idx){
+	    		$('#idx').val(idx)
+	    		var text = "참가등록을 취소하시겠습니까?";
+
+				if (confirm(text)) {
+					$("#register").attr("action", "/register_cancel.do");
+					$("#register").submit();
+				}
+	    	}
+		    $( document ).ready(function() {
+			    var idx = '${pictVO.fairpath_id}'
+		    	var qrcode = new QRCode(document.getElementById("qr_img"), {
+		    		text: idx        
+		    	});
+			});
 	        $('.cancelContainer a').click(function(){
 	            $('.cancelModal').addClass('active');
 	        });

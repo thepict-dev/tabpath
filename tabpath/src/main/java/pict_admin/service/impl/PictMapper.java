@@ -116,6 +116,13 @@ public interface PictMapper {
 
 	void update_user_bus_info(PictVO pictVO) throws Exception;
 
+	void sms_update(PictVO pictVO) throws Exception;
+
+	PictVO sms_select(PictVO pictVO) throws Exception;
+
+	void register_cancel(PictVO pictVO) throws Exception;
+
+
 
 
 }

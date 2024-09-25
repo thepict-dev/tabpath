@@ -20,7 +20,13 @@
         <!-- 데이터주고받을때 UTF-8 적용안되서 넣음 -->
         <property name="messageConverters">
             <list>
-                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes">
+			        <list>
+			          <value>application/json; charset=UTF-8</value>
+			        </list>
+			      </property>
+		      </bean>
             </list>
         </property>
     </bean>

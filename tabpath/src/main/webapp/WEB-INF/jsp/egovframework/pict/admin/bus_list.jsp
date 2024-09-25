@@ -27,11 +27,11 @@
 						    <div class="card-body">
 							    <div class="search-form">
 							    	<form action="" id="search_fm" name="search_fm" method="get" class="search-box">
-								    	<select id="bus" name="bus" style="width:250px;">
+								    	<select id="bus" name="bus" style="width:250px; margin-left:65px" class="input opt-max-width-500">
 											<option value="1" <c:if test="${pictVO.bus eq '1'}">selected</c:if>>1호차</option>
 	                    					<option value="2" <c:if test="${pictVO.bus eq '2'}">selected</c:if>>2호차</option>
 										</select>
-								    	<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+								    	
 							    	</form>
 							    </div>
 						    	<div class="tbl-basic tbl-hover">
@@ -81,7 +81,10 @@
 			</form>
 		</div>
 		<script>
-
+			$('#bus').on('change', function() {
+				$("#search_fm").attr("action", "/admin/bus_list.do");
+				$("#search_fm").submit();
+	        });
 			function search(){
 				$("#search_fm").attr("action", "/admin/bus_list.do");
 				$("#search_fm").submit();

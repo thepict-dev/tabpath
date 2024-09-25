@@ -117,8 +117,15 @@ public class PictVO extends PictDefaultVO {
 	private String sms_rand;
 	private String fairpath_id;
 	private String birthday_1;
+	private String phone;
 	
 	
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 	public String getBirthday_1() {
 		return birthday_1;
 	}

@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<c:import url="./include/head.jsp">
-    	<c:param name="pageTitle" value="TABPATH 사용자등록"/>
+    	<c:param name="pageTitle" value="TAPPASS 사용자등록"/>
     </c:import>
     <body>
 	    <div class="container login">
@@ -19,14 +19,14 @@
 	            <div class="progress">
 	                <div class="proInner"></div>
 	            </div>
-	            <h2>금강산 가는 옛길 걷기<br>사전등록입니다</h2>
-	            <form action="#" class="appContainer">
+	            <h2>금강산 가는 옛길 걷기<br>참가등록입니다</h2>
+	            <form action="" id="register" name="register" method="post" enctype="multipart/form-data" class="appContainer">
 	                <div class="inputBox phone" style="display: none;">
 	                    <p class="inputCaption">휴대폰 번호</p>
 	                    <div class="inputButton">
 	                        <input type="text" name="phone" id="phone" placeholder="휴대폰 번호를 입력하세요">
 	                        <!-- 재전송 -->
-	                        <a href="#lnk">인증번호 전송</a>
+	                        <a href="#lnk" onclick="sms_number()">인증번호 전송</a>
 	                    </div>
 	                    <div class="inputButton verify">
 	                        <input type="text" name="verify" id="verify" placeholder="인증번호를 입력하세요">
@@ -49,13 +49,75 @@
 	                    <input type="text" name="name" id="name" placeholder="이름을 입력하세요">
 	                </div>
 	                <div class="buttonContainer app">
-	                    <a href="#lnk" class="wt">이전으로</a>
-	                    <a href="#lnk" class="gr">다음으로</a>
+	                    <a href="javascript:history.back();" class="wt">이전으로</a>
+	                    <a href="#lnk" class="gr" onclick="apply_next()">다음으로</a>
 	                </div>
 	            </form>
 	        </div>
 	    </div>
 	    <script>
+	    	function apply_next(){
+	    		var text = "참가등록 하시겠습니까?";
+
+				if (confirm(text)) {
+					var param = {
+		    			name : $("#name").val(),
+		    			mobile : $('#phone').val(),
+		    			sms_rand : $('#verify').val(),
+		    			
+		    		}
+					
+					$.ajax({
+						url: '/register_save.do'
+						, type : "POST"
+						, data : JSON.stringify(param)
+						, contentType : "application/json"
+						, async : false
+						, success : function(result){
+							var code = result.code;
+							if(code == '200'){
+								alert(result.message)
+								window.location.href= result.url
+							}
+							else if(code == '400'){
+								alert(result.message)
+							}
+						},
+						error : function (err){
+							console.log(err)
+						}
+					})
+				}	
+	    	}
+	    	
+	    	
+	    	function sms_number(){
+	    		var param = {
+	    			name : $("#name").val(),
+	    			mobile : $('#phone').val(),
+	    			birth : $('#birth').val(),
+	    			gender : $('#gender').val(),
+	    			
+	    		}
+				
+				$.ajax({
+					url: '/sms_number.do'
+					, type : "POST"
+					, data : JSON.stringify(param)
+					, contentType : "application/json"
+					, async : false
+					, success : function(result){
+						var rst = result.replace(/[\r\n]+/g, ' ');
+						if(rst.includes("더픽트")){
+							alert(rst.replace("더픽트", ''))
+						}
+					},
+					error : function (err){
+						console.log(err)
+					}
+				})
+	    	}
+	    
 		    $(document).ready(function() {
 		        const $nameInput = $('#name');
 		        const $birthInput = $('#birth');

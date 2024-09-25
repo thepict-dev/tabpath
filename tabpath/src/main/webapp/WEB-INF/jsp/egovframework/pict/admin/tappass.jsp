@@ -21,7 +21,7 @@
 			
 			<div id="layoutSidenav_content">
 				<main class="contents">
-					<h2 class="contents-title">TABPATH</h2>
+					<h2 class="contents-title">TAPPASS</h2>
 					<div class="contents-box">
 						<div class="card">
 						    <div class="card-body">

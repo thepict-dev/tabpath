@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<c:import url="./include/head.jsp">
-    	<c:param name="pageTitle" value="TABPATH 사용자등록"/>
+    	<c:param name="pageTitle" value="TAPPASS 사용자등록"/>
     </c:import>
     <body>
 	    <div class="container login">
@@ -19,19 +19,45 @@
 	            <form action="#" class="loginContainer">
 	                <div class="inputBox">
 	                    <p class="inputCaption">이름</p>
-	                    <input type="text" name="name" id="name" placeholder="이름을 입력하세요">
+	                    <input type="text" name="name1" id="name1" placeholder="이름을 입력하세요">
 	                </div>
 	                <div class="inputBox">
 	                    <p class="inputCaption">휴대폰번호</p>
-	                    <input type="text" name="phone" id="phone" placeholder="휴대폰번호를 입력하세요">
+	                    <input type="text" name="mobile1" id="mobile1" placeholder="휴대폰번호를 입력하세요" onkeypress="if(event.keyCode == 13){fn_login();}">
 	                </div>
-	                <a href="#lnk">로그인</a>
+	                <a href="#lnk" onclick="fn_login()">로그인</a>
 	            </form>
 	        </div>
 	    </div>
+	    <form action="#" id="loginForm" name="loginForm" method="post">
+			<input type="hidden" name="name" id="name" value="">
+			<input type="hidden" name="mobile" id="mobile" value="">
+		</form>
 	    <script>
-	        const $nameInput = $('#name');
-	        const $phoneInput = $('#phone');
+			function fn_login() {
+
+				if ($("#name1").val() == "") {
+					alert("이름을 입력하세요.");
+					$("#name1").focus();
+					return false;
+				}
+				else{
+					$("#name").val($("#name1").val());
+				}
+				
+				if ($("#mobile1").val() == "") {
+					alert("휴대전화번호를 입력하세요.");
+					$("#mobile1").focus();
+					return false;
+				} else {
+					$("#mobile").val($("#mobile1").val());
+				}
+				document.loginForm.action = "/login_action.do";
+				document.loginForm.submit();
+				
+			}
+	        const $nameInput = $('#name1');
+	        const $phoneInput = $('#mobile1');
 	        const $loginButton = $('.loginContainer a');
 	
 	        // 휴대폰 번호

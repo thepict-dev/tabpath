@@ -3,11 +3,11 @@
 <%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <!DOCTYPE html>
 <html lang="ko">
 	<c:import url="./include/head.jsp">
-    	<c:param name="pageTitle" value="TABPATH 사용자등록"/>
+    	<c:param name="pageTitle" value="TAPPASS 사용자등록"/>
     </c:import>
     <body>
 	    <div class="container login">
@@ -19,10 +19,16 @@
 	        </div>
 	        <div class="contentBottom my">
 	            <div class="qrContainer tap">
-	                <img src="/user_img/test-qr.png" alt="">
+	                <div class="qrInner" id="qr_img"></div>
 	                <div class="seatNumber">
 	                    <p>좌석코드</p>
-	                    <p>5-23</p>
+	                    <c:if test="${pictVO.bus ne '' && pictVO.bus ne null && pictVO.bus ne undefined && pictVO.seat ne '' && pictVO.seat ne null && pictVO.seat ne undefined}">
+                   			<p>${pictVO.bus}-${pictVO.seat}</p>
+                   		</c:if> 
+                   		<c:if test="${pictVO.bus eq '' || pictVO.bus eq null || pictVO.bus eq undefined || pictVO.seat eq '' || pictVO.seat eq null || pictVO.seat eq undefined}">
+                   			<p>미배정</p>
+                   		</c:if>
+	                    
 	                </div>
 	            </div>
 	            <div class="entryContainer">
@@ -31,24 +37,20 @@
 	                    <span>이 응모권은 캡처해서 사용하실 수 없습니다</span>
 	                </div>
 	                <div class="entryNumber">
-	                    <p>No.<span>1234</span></p>
+	                    <p>No.<span>${pictVO.idx }</span></p>
 	                    <span>행사당일사용</span>
 	                </div>
 	            </div>
 	        </div>
 	    </div>
-	    <div class="cancelModal">
-	        <div class="cancelInner">
-	            <p>참여 취소</p>
-	            <span>행사 참여를 취소하시겠어요?<br>
-	                취소시 재등록은 불가해요.</span>
-	            <div class="buttonContainer">
-	                <a href="#lnk" class="wt close">닫기</a>
-	                <a href="#lnk" class="bl my">참여 취소</a>
-	            </div>
-	        </div>
-	    </div>
+
 	    <script>
+		    $( document ).ready(function() {
+			    var idx = '${pictVO.fairpath_id}'
+		    	var qrcode = new QRCode(document.getElementById("qr_img"), {
+		    		text: idx        
+		    	});
+			});
 	        $('.cancelContainer a').click(function(){
 	            $('.cancelModal').addClass('active');
 	        });

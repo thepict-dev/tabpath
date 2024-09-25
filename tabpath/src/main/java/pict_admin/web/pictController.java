@@ -11,9 +11,11 @@ import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.mail.PasswordAuthentication;
@@ -163,14 +165,26 @@ public class pictController {
 		
 		pictVO = pictService.get_register_person_info(pictVO);
 
-		if (pictVO != null && pictVO.getId() != null && !pictVO.getId().equals("")) {
+		if (pictVO != null) {
 			String name = pictVO.getName();
 			String mobile = pictVO.getMobile();
 			
 			if(inpuName.equals(name) && inputMobile.equals(mobile)) {
-				request.getSession().setAttribute("id", pictVO.getIdx());
+				request.getSession().setAttribute("idx", pictVO.getIdx());
 				
-				return "redirect:/mypage.do";
+				Date now = new Date();
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				String formatedNow = formatter.format(now);
+				System.out.println(formatedNow);
+				
+				//여기 날짜 체크해서 10/7일만 mypage.do 보내고 / 이외에는 mypage_tap.do로 보내
+				if(formatedNow.equals("2024-09-25")) {
+					return "redirect:/mypage.do";
+				}
+				else {
+					return "redirect:/mypage_tap.do";
+				}
+				
 				
 			}
 			else {
@@ -197,14 +211,12 @@ public class pictController {
 		
 		return "pict/main/mypage";
 	}
-
-	@RequestMapping(value = "/apply.do")
-	public String apply(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
-		
-		return "pict/main/apply";
-	}
 	@RequestMapping(value = "/mypage_tap.do")
-	public String mypage_tap(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+	public String mypage_tap(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		String idx = request.getSession().getAttribute("idx").toString();
+		pictVO.setIdx(Integer.parseInt(idx));
+		pictVO = pictService.get_person_info(pictVO);
+		model.addAttribute("pictVO", pictVO);
 		
 		return "pict/main/mypage_tap";
 	}
@@ -226,6 +238,23 @@ public class pictController {
 		model.addAttribute("pictVO", pictVO);
 		
 		return "pict/admin/bus_list";
+	}
+
+	@RequestMapping(value = "/apply.do")
+	public String apply(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		
+		return "pict/main/apply";
+	}
+	
+	@RequestMapping(value = "/register_cancel.do")
+	public String register_cancel(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		
+		pictService.register_cancel(pictVO);
+		request.getSession().setAttribute("idx", null);
+		model.addAttribute("message", "참가등록이 취소되었습니다.");
+		model.addAttribute("retType", ":location");
+		model.addAttribute("retUrl", "/");
+		return "pict/main/message";
 	}
 	
 	@RequestMapping(value = "/admin/user_list.do")
@@ -263,7 +292,6 @@ public class pictController {
 	}
 	@RequestMapping(value = "/admin/user_save.do", method = RequestMethod.POST)
 	public String user_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, MultipartHttpServletRequest request) throws Exception {
-		System.out.println("들어는오나");
 		if(pictVO.getSaveType() != null && pictVO.getSaveType().equals("update")) {
 			
 			try {
@@ -463,12 +491,41 @@ public class pictController {
 		
 	}
 
+	//사전등록 완료
+	@RequestMapping(value = "/register_save.do", method= RequestMethod.POST)
+	@ResponseBody
+	public HashMap<String, Object> register_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+		String name = param.get("name").toString();
+		String mobile = param.get("mobile").toString();
+		String sms_rand = param.get("sms_rand").toString();
+		
+		pictVO.setName(name);
+		pictVO.setMobile(mobile);
+		
+		pictVO = pictService.sms_select(pictVO);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		if(pictVO.getSms_rand().equals(sms_rand)){
+			pictService.sms_update(pictVO);
+			map.put("message", "참가등록이 완료되었습니다.");
+			map.put("url", "/mypage_login.do");
+			map.put("code", "200");
+		}
+		else {
+			map.put("message", "인증번호가 일치하지 않습니다.");
+			map.put("code", "400");
+		}
+		
+		return map;
+		
+	}
 	//버스입장 QR체크 페이지
 	@RequestMapping(value = "/admin/intro_bus.do")
 	public String intro_bus(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
 		
 		
-		return "pict/admin/tabpath";
+		return "pict/admin/tappass";
 	}
 	@RequestMapping(value = "/qr_insert.do", method= RequestMethod.POST)
 	@ResponseBody
@@ -539,6 +596,117 @@ public class pictController {
 		}
 		
 	}
+	
+	//문자발송
+	@RequestMapping(value = "/sms_number.do", method= RequestMethod.POST)
+	public String sms_number(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+		
+		try {
+			System.out.println("시자가ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ");
+			Random random = new Random();
+	        int verify_num = 100000 + random.nextInt(900000);
+			
+			String name = param.get("name").toString();
+			pictVO.setName(name);
+			
+			String mobile = param.get("mobile").toString();
+			pictVO.setMobile(mobile);
+			
+			String gender = param.get("gender").toString();
+			String sex = "";
+			if(gender.equals("1") || gender.equals("3")) sex = "1";
+			if(gender.equals("2") || gender.equals("4")) sex = "2";
+		
+			String birth = param.get("birth").toString();
+			pictVO.setBirthday(birth);
+			
+			pictVO = pictService.sms_select(pictVO);
+			System.out.println("널이 탔잖아 근데 왜 ");
+			if(pictVO != null) {
+				System.out.println("이미등롞ㄲㄲㄲㄲㄲㄲㄲㄲㄲ");
+				model.addAttribute("message", "이미 등록된 회원입니다.");
+				model.addAttribute("retType", ":location");
+				model.addAttribute("retUrl", "/");
+				return "pict/main/message_alert";
+			}
+			else {
+				URL url = new URL("https://api.fairpass.co.kr/fsApi/VisitorInsert");
+				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+				
+				conn.setRequestMethod("POST"); // http 메서드
+				conn.setRequestProperty("Content-Type", "application/json"); // header Content-Type 정보
+				conn.setRequestProperty("ApiKey", " rioE2lpgWGInf2Gd7XF9cOCDvqXGUzKXYPrqBCW"); // header의 auth 정보
+				
+				conn.setDoInput(true); // 서버에 전달할 값이 있다면 true
+				conn.setDoOutput(true);// 서버에서 받을 값이 있다면 true
+				
+				JSONObject obj_param = new JSONObject();
+				obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
+
+				
+				obj_param.put("NAME", name);
+				obj_param.put("TEL", mobile);
+				obj_param.put("GENDER", sex);
+				obj_param.put("INFO10", birth);
+				obj_param.put("OPTION_IDX", "5019");
+				
+				//서버에 데이터 전달
+				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+				bw.write(obj_param.toString()); // 버퍼에 담기
+				bw.flush(); // 버퍼에 담긴 데이터 전달
+				bw.close();
+				
+				// 서버로부터 데이터 읽어오기
+				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				StringBuilder sb = new StringBuilder();
+				String line = null;
+				
+				while((line = br.readLine()) != null) { // 읽을 수 있을 때 까지 반복
+					sb.append(line);
+				}
+				JSONObject obj = new JSONObject(sb.toString()); // json으로 변경 (역직렬화)
+				int state_code = obj.getInt("resultCode");
+				if(state_code != 0) {
+					model.addAttribute("message", "인증에 오류가 발생하였습니다.");
+					model.addAttribute("retType", ":location");
+					model.addAttribute("retUrl", "/");
+					return "pict/main/message_alert";
+				}
+				else {
+					if(pictVO == null) {
+						pictVO = new PictVO();
+					}
+					pictVO.setFairpath_id(obj.getInt("VISITOR_IDX")+"");
+					pictVO.setName(name);
+					pictVO.setMobile(mobile);
+					pictVO.setBirthday(birth);
+					pictVO.setBirthday_1(sex);
+					pictVO.setSms_rand(verify_num+"");
+					
+					pictService.user_insert(pictVO);
+					
+					String msg = "귀하의 인증번호는 " + verify_num + " 입니다.\n인증번호를 입력하시고 참가등록을 진행해주세요.";
+					model.addAttribute("msg", msg);
+					model.addAttribute("mobile", mobile);
+					model.addAttribute("retType", ":none");
+					model.addAttribute("retUrl", "/");
+					return "pict/main/message_sms";
+					
+				}
+			}
+		}
+		catch(Exception e) {
+			System.out.println("오류ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ");
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			model.addAttribute("message", "오류가 발생하였습니다.");
+			model.addAttribute("retType", ":location");
+			model.addAttribute("retUrl", "/");
+			return "pict/main/message_alert";
+		}
+	}
+	
+	
 	
 	//메소드
 	public static String encryptPassword(String password, String id) throws Exception {

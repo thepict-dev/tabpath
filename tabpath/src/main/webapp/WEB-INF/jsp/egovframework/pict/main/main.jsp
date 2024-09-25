@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<c:import url="./include/head.jsp">
-    	<c:param name="pageTitle" value="TABPATH 사용자등록"/>
+    	<c:param name="pageTitle" value="TAPPASS 사용자등록"/>
     </c:import>
     <body>
 	    <div class="container">
@@ -17,8 +17,8 @@
 	        </h1>
 	        <div class="loginBottom">
 	            <div class="buttonContainer login">
-	                <a href="/login.do" class="bk">로그인</a>
-	                <a href="/apply.do" class="bl">사전인증하기</a>
+	                <a href="/mypage_login.do" class="bk">로그인</a>
+	                <a href="/apply.do" class="bl">참가등록하기</a>
 	            </div>
 	            <div class="personInfo">
 	                <p>로그인하시면 아래 내용에 동의하는 것으로 간주됩니다</p>
