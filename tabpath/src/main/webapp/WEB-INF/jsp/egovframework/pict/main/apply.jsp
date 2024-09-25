@@ -25,23 +25,23 @@
 	                    <p class="inputCaption">탑승 장소</p>
                         <div class="checkContainer">
                             <div class="checkInput">
-                                <input type="radio" name="boarding" id="boarding1">
+                                <input type="radio" name="boarding" id="boarding1" value="1">
                                 <label for="boarding1">종합운동장</label>
                             </div>
                             <div class="checkInput">
-                                <input type="radio" name="boarding" id="boarding2">
+                                <input type="radio" name="boarding" id="boarding2" value="2">
                                 <label for="boarding2">국토정중앙면</label>
                             </div>
                             <div class="checkInput">
-                                <input type="radio" name="boarding" id="boarding3">
+                                <input type="radio" name="boarding" id="boarding3" value="3">
                                 <label for="boarding3">동면</label>
                             </div>
                             <div class="checkInput">
-                                <input type="radio" name="boarding" id="boarding4">
+                                <input type="radio" name="boarding" id="boarding4" value="4">
                                 <label for="boarding4">방산</label>
                             </div>
                             <div class="checkInput">
-                                <input type="radio" name="boarding" id="boarding5">
+                                <input type="radio" name="boarding" id="boarding5" value="5">
                                 <label for="boarding5">해안</label>
                             </div>
                         </div>
@@ -93,6 +93,8 @@
 		    			name : $("#name").val(),
 		    			mobile : $('#phone').val(),
 		    			sms_rand : $('#verify').val(),
+		    			location : $('#location').val(),
+		    			boarding : $('input[name=boarding]').val()
 		    			
 		    		}
 					
@@ -103,13 +105,12 @@
 						, contentType : "application/json"
 						, async : false
 						, success : function(result){
-							var code = result.code;
-							if(code == '200'){
-								alert(result.message)
-								window.location.href= result.url
+							var rst = result.replace(/[\r\n]+/g, ' ');
+							if(rst.includes("더픽트")){
+								alert(rst.replace("더픽트", ''))
 							}
-							else if(code == '400'){
-								alert(result.message)
+							else{
+								window.location.href="/mypage_login.do"
 							}
 						},
 						error : function (err){

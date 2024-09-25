@@ -153,8 +153,18 @@ public class pictController {
 			return "pict/main/mypage_login";
 		}
 		else {
-			//나중에 여기 계정별로 리다이렉트 분기처리
-			return "redirect:/mypage.do";
+			Date now = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String formatedNow = formatter.format(now);
+			System.out.println(formatedNow);
+			
+			//여기 날짜 체크해서 10/7일만 mypage.do 보내고 / 이외에는 mypage_tap.do로 보내
+			if(formatedNow.equals("2024-10-07")) {
+				return "redirect:/mypage.do";
+			}
+			else {
+				return "redirect:/mypage_tap.do";
+			}
 			
 		}
 	}
@@ -178,7 +188,7 @@ public class pictController {
 				System.out.println(formatedNow);
 				
 				//여기 날짜 체크해서 10/7일만 mypage.do 보내고 / 이외에는 mypage_tap.do로 보내
-				if(formatedNow.equals("2024-09-25")) {
+				if(formatedNow.equals("2024-10-07")) {
 					return "redirect:/mypage.do";
 				}
 				else {
@@ -493,31 +503,55 @@ public class pictController {
 
 	//사전등록 완료
 	@RequestMapping(value = "/register_save.do", method= RequestMethod.POST)
-	@ResponseBody
-	public HashMap<String, Object> register_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
-		String name = param.get("name").toString();
-		String mobile = param.get("mobile").toString();
-		String sms_rand = param.get("sms_rand").toString();
-		
-		pictVO.setName(name);
-		pictVO.setMobile(mobile);
-		
-		pictVO = pictService.sms_select(pictVO);
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		if(pictVO.getSms_rand().equals(sms_rand)){
-			pictService.sms_update(pictVO);
-			map.put("message", "참가등록이 완료되었습니다.");
-			map.put("url", "/mypage_login.do");
-			map.put("code", "200");
+	public String register_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+		try {
+			String name = param.get("name").toString();
+			String mobile = param.get("mobile").toString();
+			String sms_rand = param.get("sms_rand").toString();
+
+			String boarding = param.get("boarding").toString();
+			String location = param.get("location").toString();
+			
+			pictVO.setName(name);
+			pictVO.setMobile(mobile);
+			
+			pictVO = pictService.sms_select(pictVO);
+			
+			
+			if(pictVO.getSms_rand().equals(sms_rand)){
+				pictVO.setBoarding(boarding);
+				pictVO.setLocation(location);
+				pictService.sms_update(pictVO);
+				
+				String msg = "가보고 싶은 두타연 : 금강산 가는 옛길 걷기 참가자 모집 행사에 참가확정 되었습니다.\n마이페이지 URL : https://www.tabpath.co.kr/mypage_login.do";
+				System.out.println(msg);
+				System.out.println(mobile);
+				model.addAttribute("msg", msg);
+				model.addAttribute("mobile", mobile);
+				model.addAttribute("retType", ":none");
+				model.addAttribute("retUrl", "/");
+				return "pict/main/message_sms";
+				
+			}
+			else {
+				System.out.println("여기가 안되는데");
+				model.addAttribute("message", "인증번호가 올바르지 않습니다.");
+				model.addAttribute("retType", ":location");
+				model.addAttribute("retUrl", "/");
+				return "pict/main/message_alert";
+				
+				
+			}
 		}
-		else {
-			map.put("message", "인증번호가 일치하지 않습니다.");
-			map.put("code", "400");
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			model.addAttribute("message", "인증번호가 올바르지 않습니다.");
+			model.addAttribute("retType", ":location");
+			model.addAttribute("retUrl", "/");
+			return "pict/main/message_alert";
 		}
 		
-		return map;
 		
 	}
 	//버스입장 QR체크 페이지
@@ -602,7 +636,6 @@ public class pictController {
 	public String sms_number(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
 		
 		try {
-			System.out.println("시자가ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ");
 			Random random = new Random();
 	        int verify_num = 100000 + random.nextInt(900000);
 			
@@ -682,7 +715,6 @@ public class pictController {
 					pictVO.setBirthday(birth);
 					pictVO.setBirthday_1(sex);
 					pictVO.setSms_rand(verify_num+"");
-					
 					pictService.user_insert(pictVO);
 					
 					String msg = "귀하의 인증번호는 " + verify_num + " 입니다.\n인증번호를 입력하시고 참가등록을 진행해주세요.";

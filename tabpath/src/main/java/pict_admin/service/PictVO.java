@@ -118,8 +118,22 @@ public class PictVO extends PictDefaultVO {
 	private String fairpath_id;
 	private String birthday_1;
 	private String phone;
+	private String boarding;
+	private String location;
 	
 	
+	public String getBoarding() {
+		return boarding;
+	}
+	public void setBoarding(String boarding) {
+		this.boarding = boarding;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
 	public String getPhone() {
 		return phone;
 	}

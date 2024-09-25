@@ -250,10 +250,10 @@
 	<insert id="user_insert" parameterType="pictVO">
 		INSERT INTO user_table
 			(
-			 name, mobile, birthday_1, birthday, reg_date, bus, seat, sms_rand, use_at, fairpath_id
+			 name, mobile, birthday_1, birthday, reg_date, bus, seat, sms_rand, use_at, fairpath_id, location, boarding
 			)
 		VALUES (
-			 #{name}, #{mobile}, #{birthday_1}, #{birthday}, now(), #{bus}, #{seat}, #{sms_rand}, '1', #{fairpath_id}
+			 #{name}, #{mobile}, #{birthday_1}, #{birthday}, now(), #{bus}, #{seat}, #{sms_rand}, 'Y', #{fairpath_id}, #{location}, #{boarding}
 			  ) 
 	</insert>
 	
@@ -263,7 +263,7 @@
 		name =#{name}, mobile=#{mobile},
 		birthday_1 =#{birthday_1}, birthday=#{birthday},
 		bus =#{bus}, seat=#{seat},
-		reg_date = now()
+		reg_date = now(), location = #{location}, boarding = #{boarding}
 		<if test="use_at != null and use_at != '' ">
 			, use_at = #{use_at}
 		</if>
@@ -305,7 +305,7 @@
 
 	<update id="sms_update" parameterType="pictVO">
 		update user_table
-		set verify = "Y"
+		set verify = "Y", location = #{location}, boarding = #{boarding}
 		where name = #{name} and mobile = #{mobile}
 	</update>
 	

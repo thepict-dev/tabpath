@@ -77,14 +77,34 @@
 										<label for="title" class="title">상태</label>
 										<div class="input-box">
 											<select id="use_at" name="use_at" style="width:250px;">
-												<option value="1" <c:if test="${pictVO.use_at eq '1'}">selected</c:if> >승인</option>
-		                    					<option value="2" <c:if test="${pictVO.use_at eq '2'}">selected</c:if>>취소</option>
+												<option value="Y" <c:if test="${pictVO.use_at eq 'Y'}">selected</c:if> >승인</option>
+		                    					<option value="C" <c:if test="${pictVO.use_at eq 'C'}">selected</c:if>>취소</option>
 											</select>
 										</div>
 									</div>
 								</div>
-								
-
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">거주지역</label>
+										<div class="input-box">
+											<input type="text" id="location" name="location" value="${pictVO.location}" class="input opt-max-width-500">
+										</div>
+									</div>
+								</div>
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">탑승 장소</label>
+										<div class="input-box">
+											<select id="boarding" name="boarding" style="width:250px;">
+												<option value="1" <c:if test="${pictVO.boarding eq '1'}">selected</c:if> >종합운동장</option>
+		                    					<option value="2" <c:if test="${pictVO.boarding eq '2'}">selected</c:if>>국토정중앙면</option>
+		                    					<option value="3" <c:if test="${pictVO.boarding eq '3'}">selected</c:if>>동면</option>
+		                    					<option value="4" <c:if test="${pictVO.boarding eq '4'}">selected</c:if>>방산</option>
+		                    					<option value="5" <c:if test="${pictVO.boarding eq '5'}">selected</c:if>>해안면</option>
+											</select>
+										</div>
+									</div>
+								</div>
 								<div class="btn-box">
 									<c:if test="${pictVO.saveType eq 'insert'}">
 										<button type="button" onclick="button1_click();" class="btn-basic btn-primary btn-sm">등록</button>

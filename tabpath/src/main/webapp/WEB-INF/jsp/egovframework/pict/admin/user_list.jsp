@@ -35,10 +35,13 @@
 							        	<colgroup>
 							        		<col style="width:10%;">
 							        		<col style="width:10%;">
-							        		<col style="width:15%;">
 							        		<col style="width:10%;">
-							        		<col style="width:15%;">
-							        		<col style="width:15%;">
+							        		<col style="width:10%;">
+							        		<col style="width:10%;">
+							        		<col style="width:10%;">
+							        		<col style="width:10%;">
+							        		<col style="width:20%;">
+							        		<col style="width:10%;">
 							        	</colgroup>
 							            <thead>
 							                <tr class="thead">
@@ -48,6 +51,8 @@
 							                    <th>생년월일</th>
 							                    <th>성별</th>
 							                    <th>버스좌석</th>
+							                    <th>탑승장소</th>
+							                    <th>거주지역</th>
 							                    <th>상태</th>
 							                </tr>
 							            </thead>
@@ -58,15 +63,26 @@
 							                    	<td class="opt-tl"><a href="javascript:void(0);" onclick="board_mod('${resultList.idx}');" class="link">${resultList.name}</a></td>
 							                    	<td>${resultList.mobile}</td>
 							                    	<td>${resultList.birthday}</td>
-							                    	<td>${resultList.gender}</td>
+							                    	<td>
+							                    		<c:if test="${resultList.birthday_1 eq '1'}">남자</c:if>
+							                    		<c:if test="${resultList.birthday_1 eq '2'}">여자</c:if>
+						                    		</td>
 							                    	<td>
 							                    		<c:if test="${resultList.bus ne '' && resultList.bus ne null && resultList.bus ne undefined && resultList.seat ne '' && resultList.seat ne null && resultList.seat ne undefined}">
 							                    			${resultList.bus}호차 ${resultList.seat}번
 							                    		</c:if>
 						                    		</td>
+						                    		<td>
+						                    			<c:if test="${resultList.boarding eq '1'}">종합운동장</c:if>
+						                    			<c:if test="${resultList.boarding eq '2'}">국토정중앙면</c:if>
+						                    			<c:if test="${resultList.boarding eq '3'}">동면</c:if>
+						                    			<c:if test="${resultList.boarding eq '4'}">방산</c:if>
+						                    			<c:if test="${resultList.boarding eq '5'}">해안면</c:if>
+					                    			</td>
+						                    		<td>${resultList.location}</td>
 							                    	<td>
-							                    		<c:if test="${resultList.use_at eq '1'}"><span style="color : blue">승인</span></c:if>
-							                    		<c:if test="${resultList.use_at ne '1'}"><span style="color : red">취소</span></c:if>
+							                    		<c:if test="${resultList.use_at eq 'Y'}"><span style="color : blue">승인</span></c:if>
+							                    		<c:if test="${resultList.use_at ne 'Y'}"><span style="color : red">취소</span></c:if>
 													</td>
 								                </tr>
 							                </c:forEach>
