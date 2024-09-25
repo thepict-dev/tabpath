@@ -253,7 +253,7 @@
 			 name, mobile, birthday_1, birthday, reg_date, bus, seat, sms_rand, use_at, fairpath_id
 			)
 		VALUES (
-			 #{name}, #{mobile}, #{birthday_1}, #{birthday}, now(), #{bus}, #{seat}, #{sms_rand}, #{use_at}, #{fairpath_id}
+			 #{name}, #{mobile}, #{birthday_1}, #{birthday}, now(), #{bus}, #{seat}, #{sms_rand}, '1', #{fairpath_id}
 			  ) 
 	</insert>
 	
@@ -265,7 +265,7 @@
 		bus =#{bus}, seat=#{seat},
 		reg_date = now()
 		<if test="use_at != null and use_at != '' ">
-			use_at = #{use_at}
+			, use_at = #{use_at}
 		</if>
 		where idx = #{idx}
 	</update>
@@ -295,4 +295,10 @@
 		where idx= #{idx}
 	</update>
 	
+	<select id="bus_list" resultType="pictVO">
+		select * 
+		from user_table
+		where bus = #{bus}
+		order by cast(seat as unsigned) asc
+	</select>
 </mapper>

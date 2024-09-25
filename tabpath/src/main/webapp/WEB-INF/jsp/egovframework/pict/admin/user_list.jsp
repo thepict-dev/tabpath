@@ -8,49 +8,78 @@
 
 <!DOCTYPE html>
 <html lang="ko">
-	<c:import url="../main/header.jsp">
+	<c:import url="../admin/header.jsp">
     	<c:param name="pageTitle" value="사용자 리스트"/>
     </c:import>
-    <body>
-    	<div class="wrapper">
-        	<%@include file="../main/navigation.jsp" %>
-			<main class="sub-container">
-				<h3 class="contents-title">사용자 리스트</h3>
-    			<div class="board-search">
-			    	<form action="" id="search_fm" name="search_fm" method="get" class="board-search-form">
-<%-- 			    		<label class="board-search-radio"><input type="radio" name="board_type" value="0" <c:if test="${pictVO.board_type eq '0' || pictVO.board_type eq null || pictVO.board_type eq undefined}"> checked </c:if> >전체</label> --%>
-<%-- 				    	<label class="board-search-radio"><input type="radio" name="board_type" value="1" <c:if test="${pictVO.board_type eq '1'}"> checked </c:if> >게시글</label> --%>
-<%-- 						<label class="board-search-radio"><input type="radio" name="board_type" value="2" <c:if test="${pictVO.board_type eq '2'}"> checked </c:if> >뉴스</label> --%>
-						<div class="board-search-input">
-							<input type="text" id="search_text" name="search_text" value="${pictVO.search_text}" class="input" placeholder="검색어를 입력하세요.">
-				    		<button type="button" onclick="search();" title="검색하기" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-						</div>
-			    	</form>
-			    	<div class="board-search-btn">
-						<button type="button" onclick="board_insert();" class="btn-basic btn-primary">게시글 등록</button>
-					</div>
-			    </div>
-    			<div class="board-list">
-    				<c:forEach var="resultList" items="${resultList}" varStatus="status">
-	    				<div class="board-item">
-	    					<a href="javascript:void(0);" class="board-lnk" onclick="board_mod('${resultList.idx}');">
-	    						<div class="board-col num">${status.count}</div>
-	    						<c:if test="${resultList.board_type eq '2'}">
-	    							<div class="board-col type">
-	    								<span class="board-badge">${resultList.news}</span>
-    								</div>
-	    						</c:if>
-	    						<div class="board-col title">${resultList.title}</div>
-	    						<div class="board-col date">${resultList.reg_date}</div>
-	    					</a>
-	    				</div>
-    				</c:forEach>
-    			</div>
-			</main>
+    <body class="sb-nav-fixed">
+        <%@include file="./navigation.jsp" %>
+        <div id="layoutSidenav">
+	        <div id="layoutSidenav_nav">
+				<%@include file="./gnb.jsp" %>
+			</div>
+			
+			<div id="layoutSidenav_content">
+				<main class="contents">
+					<h2 class="contents-title">사용자 리스트</h2>
+					<div class="contents-box">
+						<div class="card">
+						    <div class="card-body">
+							    <div class="search-form">
+							    	<form action="" id="search_fm" name="search_fm" method="get" class="search-box" style="max-width:500px">
+							    		<input type="text" id="search_text" name="search_text" value="${pictVO.search_text}" class="input" placeholder="이름 혹은 연락처로 검색하세요." autocomplete="off" onkeypress="if(event.keyCode == 13){search();}">
+								    	<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+							    	</form>
+							    </div>
+						    	<div class="tbl-basic tbl-hover">
+							        <table style="text-align : left">
+							        	<colgroup>
+							        		<col style="width:10%;">
+							        		<col style="width:10%;">
+							        		<col style="width:15%;">
+							        		<col style="width:10%;">
+							        		<col style="width:15%;">
+							        		<col style="width:15%;">
+							        	</colgroup>
+							            <thead>
+							                <tr class="thead">
+							                    <th>순서</th>
+							                    <th>이름</th>
+							                    <th>연락처</th>
+							                    <th>생년월일</th>
+							                    <th>성별</th>
+							                    <th>버스좌석</th>
+							                    <th>상태</th>
+							                </tr>
+							            </thead>
+							            <tbody>
+								            <c:forEach var="resultList" items="${resultList}" varStatus="status">
+								                <tr>
+							                    	<td>${status.count}</td>
+							                    	<td class="opt-tl"><a href="javascript:void(0);" onclick="board_mod('${resultList.idx}');" class="link">${resultList.name}</a></td>
+							                    	<td>${resultList.mobile}</td>
+							                    	<td>${resultList.birthday}</td>
+							                    	<td>${resultList.gender}</td>
+							                    	<td>
+							                    		<c:if test="${resultList.bus ne '' && resultList.bus ne null && resultList.bus ne undefined && resultList.seat ne '' && resultList.seat ne null && resultList.seat ne undefined}">
+							                    			${resultList.bus}호차 ${resultList.seat}번
+							                    		</c:if>
+						                    		</td>
+							                    	<td>
+							                    		<c:if test="${resultList.use_at eq '1'}"><span style="color : blue">승인</span></c:if>
+							                    		<c:if test="${resultList.use_at ne '1'}"><span style="color : red">취소</span></c:if>
+													</td>
+								                </tr>
+							                </c:forEach>
+							            </tbody>
+						            </table>
+				            	</div>
+				            </div>
+			            </div>
+		            </div>
+				</main>
+			</div>
 			<form action="" id="register" name="register" method="post" enctype="multipart/form-data">
-				<input type='hidden' name="idx" id="idx" value='' />
-				<input type='hidden' name="use_at" id="use_at" value='' />
-				<input type='hidden' name="type" id="type" value='' />
+				<input type="hidden" name="idx" id="idx" value="" />
 			</form>
 		</div>
 		<script>

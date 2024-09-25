@@ -5,75 +5,107 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html lang="ko">
-<c:import url="../main/header.jsp">
-	<c:param name="pageTitle" value="사용자 등록" />
+<c:import url="../admin/header.jsp">
+	<c:param name="pageTitle" value="사용자 리스트"/>
 </c:import>
+<body class="sb-nav-fixed">
+	<form action="" id="register" name="register" method="post" enctype="multipart/form-data">
+		<%@include file="./navigation.jsp"%>
+		<div id="layoutSidenav">
+			<div id="layoutSidenav_nav">
+				<%@include file="./gnb.jsp"%>
+			</div>
+			<div id="layoutSidenav_content">
+				<main class="contents">
+					<h2 class="contents-title">사용자 등록</h2>
+					<div class="contents-box" style="position:relative">
+						<div class="card">
+							<div class="card-body">
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">이름</label>
+										<div class="input-box">
+											<input type="text" id="name" name="name" value="${pictVO.name}" class="input opt-max-width-500">
+										</div>
+									</div>
+								</div>
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">휴대전화번호</label>
+										<div class="input-box">
+											<input type="text" id="mobile" name="mobile" value="${pictVO.mobile}" class="input opt-max-width-500">
+										</div>
+									</div>
+								</div>
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">생년월일</label>
+										<div class="input-box">
+											<input type="text" id="birthday" name="birthday" value="${pictVO.birthday}" class="input opt-max-width-500">
+										</div>
+									</div>
+								</div>
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">성별</label>
+										<div class="input-box">
+											<select id="birthday_1" name="birthday_1" style="width:250px;">
+												<option value="1" <c:if test="${pictVO.birthday_1 eq '1'}">selected</c:if> >남자</option>
+		                    					<option value="2" <c:if test="${pictVO.birthday_1 eq '2'}">selected</c:if>>여자</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">버스(호차)</label>
+										<div class="input-box">
+											<input type="text" id="bus" name="bus" value="${pictVO.bus}" class="input opt-max-width-500">
+										</div>
+									</div>
+								</div>
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">버스(좌석)</label>
+										<div class="input-box">
+											<input type="text" id="seat" name="seat" value="${pictVO.seat}" class="input opt-max-width-500">
+										</div>
+									</div>
+								</div>
+								<div class="write-box">
+									<div class="write-item">
+										<label for="title" class="title">상태</label>
+										<div class="input-box">
+											<select id="use_at" name="use_at" style="width:250px;">
+												<option value="1" <c:if test="${pictVO.use_at eq '1'}">selected</c:if> >승인</option>
+		                    					<option value="2" <c:if test="${pictVO.use_at eq '2'}">selected</c:if>>취소</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								
 
-<body>
-	<div class="wrapper">
-		<form action="" id="register" name="register" method="post" enctype="multipart/form-data">
-			<%@include file="../main/navigation.jsp"%>
-			<main class="sub-container">
-				<h3 class="contents-title">사용자 등록</h3>
-    			<div class="board-write">
-	    			<table>
-	    				<colgroup>
-	    					<col style="width:15%;">
-	    					<col style="width:auto;">
-	    				</colgroup>
-						<tbody>
-							<tr>
-								<th class="title">이름*</th>
-								<td>
-									<input type="text" id="name" name="name" value="${pictVO.name}" class="board-write-input">
-								</td>
-							</tr>
-							<tr>
-								<th class="title">연락처*</th>
-								<td>
-									<input type="text" id="mobile" name="mobile" value="${pictVO.mobile}" class="board-write-input">
-								</td>
-							</tr>
-							<tr>
-								<th class="title">생년월일*</th>
-								<td>
-									<input type="text" id="birthday" name="birthday" value="${pictVO.birthday}" class="board-write-input">
-									<input type="text" id="birthday_1" name="birthday_1" value="${pictVO.birthday_1}" class="board-write-input" maxlength="1">
-								</td>
-							</tr>
-							<tr>
-								<th class="title">버스(호차)</th>
-								<td>
-									<input type="text" id="bus" name="bus" value="${pictVO.bus}" class="board-write-input">
-								</td>
-							</tr>
-							<tr>
-								<th class="title">좌석번호</th>
-								<td>
-									<input type="text" id="seat" name="seat" value="${pictVO.seat}" class="board-write-input">
-								</td>
-							</tr>
-							
-						</tbody>
-					</table>
-				</div>
-				<div class="board-write-btn">
-					<c:if test="${pictVO.saveType eq 'update'}">
-						<button type="button" onclick="javascript:board_delete()" class="btn-basic btn-default">삭제</button>
-					</c:if>
-		            <button type="button" onclick="button1_click();" class="btn-basic btn-primary">
-						<c:if test="${pictVO.saveType eq 'insert'}">등록</c:if>
-						<c:if test="${pictVO.saveType ne 'insert'}">수정</c:if>
-					</button>
-		        	<button type="button" onclick="javascript:board_list()" class="btn-basic btn-outline">목록보기</button>    
-	            </div>
-			</main>
-			<input type='hidden' name="saveType" id="saveType" value='${pictVO.saveType}' /> 
-			<input type='hidden' name="idx" id="idx" value='${pictVO.idx}' /> 
-			<input type='hidden' name="use_at" id="use_at" value='${pictVO.use_at}' />
-			<input type="hidden" name="fairpath_id" id="fairpath_id" value="${pictVO.fairpath_id }">
-		</form>
-	</div>
+								<div class="btn-box">
+									<c:if test="${pictVO.saveType eq 'insert'}">
+										<button type="button" onclick="button1_click();" class="btn-basic btn-primary btn-sm">등록</button>
+									</c:if>
+									<c:if test="${pictVO.saveType ne 'insert'}">
+										<button type="button" onclick="button1_click();" class="btn-basic btn-primary btn-sm">수정</button>
+									</c:if>
+						        	<button type="button" onclick="javascript:popup_list();" class="btn-basic btn-common btn-sm">목록보기</button>    
+					            </div>
+							</div>
+						</div>
+						
+		            </div>
+		            
+				</main>
+			</div>
+		</div>
+		<input type='hidden' name="saveType" id="saveType" value='${pictVO.saveType}' /> 
+		<input type='hidden' name="idx" id="idx" value='${pictVO.idx}' /> 
+		<input type="hidden" name="fairpath_id" id="fairpath_id" value="${pictVO.fairpath_id}">
+	</form>
 
 	<script>
 		function board_delete() {

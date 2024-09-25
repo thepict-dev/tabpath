@@ -8,12 +8,16 @@ import java.net.HttpURLConnection;
 
 import java.net.URL;
 import java.security.MessageDigest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.PasswordAuthentication;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pict_admin.service.AdminService;
@@ -42,6 +47,95 @@ public class pictController {
 	@Resource(name = "adminService")
 	private AdminService adminService;
 	
+	
+	@RequestMapping(value = "/pict_main.do")
+	public String pict_main(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		String sessions = (String)request.getSession().getAttribute("id");
+		System.out.println(sessions);
+		if(sessions == null || sessions == "null") {
+			return "redirect:/pict_login.do";
+		}
+		else {
+			String user_id = (String)request.getSession().getAttribute("id");
+			if(request.getSession().getAttribute("id") != null) {
+				adminVO.setAdminId((String)request.getSession().getAttribute("id"));
+				adminVO = adminService.get_user_info(adminVO);
+				model.addAttribute("adminVO", adminVO);
+			}
+		
+			return "redirect:/admin/user_list.do";
+		
+		}
+	}
+	
+	@RequestMapping(value = "/pict_login.do")
+	public String login_main(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpServletResponse response) throws Exception {
+
+		String sessions = (String)request.getSession().getAttribute("id");
+		if(sessions == null || sessions == "null") {
+			return "pict/admin/login";
+		}
+		else {
+			//나중에 여기 계정별로 리다이렉트 분기처리
+			return "redirect:/admin/user_list.do";
+			
+		}
+			
+	}
+	
+	@RequestMapping(value = "/login.do")
+	public String login(@ModelAttribute("adminVO") AdminVO adminVO, HttpServletRequest request,  ModelMap model) throws Exception {
+		//처음 드러와서 세션에 정보있으면 메인으로 보내줘야함
+		String inpuId = adminVO.getAdminId();
+		String inputPw = adminVO.getAdminPw();
+		
+		adminVO = adminService.get_user_info(adminVO);
+
+		if (adminVO != null && adminVO.getId() != null && !adminVO.getId().equals("")) {
+			String user_id = adminVO.getId();
+			String enpassword = encryptPassword(inputPw, inpuId);	//입력비밀번호
+			
+			if(enpassword.equals(adminVO.getPassword())) {
+				request.getSession().setAttribute("id", adminVO.getId());
+				request.getSession().setAttribute("name", adminVO.getName());
+				request.getSession().setAttribute("depart", adminVO.getDepart());
+
+				String ip = request.getRemoteAddr();
+			    DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			    String now = format2.format(Calendar.getInstance().getTime());
+			    
+			    adminVO.setLast_login_ip(ip);
+			    adminVO.setLast_login_date(now);
+			    adminService.insert_login_info(adminVO);
+			    
+			    adminVO.setAdminId(user_id);
+			    adminVO = adminService.get_user_info(adminVO);
+			    
+				return "redirect:/pict_main.do";
+				
+			}
+			else {
+				model.addAttribute("message", "입력하신 정보가 일치하지 않습니다.");
+				model.addAttribute("retType", ":location");
+				model.addAttribute("retUrl", "/pict_login.do");
+				return "pict/main/message";
+			}
+		}
+		else {
+			model.addAttribute("message", "입력하신 정보가 일치하지 않습니다.");
+			model.addAttribute("retType", ":location");
+			model.addAttribute("retUrl", "/pict_login.do");
+			return "pict/main/message";
+		}
+	}
+	@RequestMapping(value = "/logout.do")
+	public String logout(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request,  ModelMap model) throws Exception {
+		request.getSession().setAttribute("id", null);
+		request.getSession().setAttribute("name", null);
+		
+		return "redirect:/pict_login.do";
+		
+	}
 	
 	@RequestMapping(value = "/main.do")
 	public String main(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
@@ -151,8 +245,9 @@ public class pictController {
 		model.addAttribute("pictVO", pictVO);
 		return "pict/admin/user_register";
 	}
-	@RequestMapping(value = "/admin/user_save.do")
-	public String user_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/admin/user_save.do", method = RequestMethod.POST)
+	public String user_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, MultipartHttpServletRequest request) throws Exception {
+		System.out.println("들어는오나");
 		if(pictVO.getSaveType() != null && pictVO.getSaveType().equals("update")) {
 			
 			try {
@@ -199,6 +294,7 @@ public class pictController {
 				}
 				JSONObject obj = new JSONObject(sb.toString()); // json으로 변경 (역직렬화)
 				int state_code = obj.getInt("resultCode");
+				System.out.println(obj);
 				if(state_code != 0) {
 					model.addAttribute("message", "저장 중 오류가 발생하였습니다.");
 					model.addAttribute("retType", ":location");
@@ -270,7 +366,6 @@ public class pictController {
 				int state_code = obj.getInt("resultCode");
 				System.out.println(obj);
 				if(state_code != 0) {
-					
 					model.addAttribute("message", "저장 중 오류가 발생하였습니다.");
 					model.addAttribute("retType", ":location");
 					model.addAttribute("retUrl", "/admin/user_list.do");
