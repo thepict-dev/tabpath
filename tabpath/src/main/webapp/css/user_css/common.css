@@ -150,44 +150,40 @@ input[type=text]:focus, input[type=password]:focus{
 
 
 /* checkbox */
-.checkInputBox{
+
+/* checkbox */
+.checkContainer{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 8px;
+    flex-wrap: wrap;
+    column-gap: 20px;
     width: 100%;
-    padding: 10px 0;
 }
-input[type=checkbox] {
-    /* display:none; */
+.checkInput{
+    display: flex;
+    align-items: center;
+    column-gap: 6px;
+    padding: 13px 0 13px 6px;
 }
-input.checkOnly[type="checkbox"]{
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    border-radius: 50%;
-    appearance: none;
-    cursor: pointer;
-    background-image: url('/img/user_img/uncheck-grey.png');
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position: center center;
+input[type=checkbox], input[type=radio] {
+    display:none;
 }
-input.checkOnly[type="checkbox"]:checked {
-    width: 20px;
-    height: 20px;
-    background-repeat: no-repeat;
-    background-image: url('/img/user_img/checked-grey.png');
-    background-size: 100%;
-    background-position: center center;
-}
-.checkInputBox label{
-    font-size: 14px;
+input[type=checkbox] + label, input[type=radio] + label { 
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    color: var(--grey-900);
+    font-size: 18px;
+    font-style: normal;
     font-weight: 500;
-    line-height: 100%; /* 14px */
-    letter-spacing: -0.7px;
-    text-decoration-line: underline;
-    cursor: pointer;
+    line-height: 100%; /* 18px */
+    letter-spacing: -0.9px;
+    background-repeat: no-repeat;
+    background-image: url('/user_img/uncheck.png');
+    background-size: 22px;
+    background-position: -5px -3px;
+}
+input[type=checkbox]:checked + label, input[type=radio]:checked + label {
+    background-image: url('/user_img/checked.png');
 }
 
 ::-webkit-scrollbar {
