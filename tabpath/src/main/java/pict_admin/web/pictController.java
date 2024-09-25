@@ -11,6 +11,7 @@ import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -188,7 +189,11 @@ public class pictController {
 		
 	}
 	@RequestMapping(value = "/mypage.do")
-	public String mypage(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+	public String mypage(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		String idx = request.getSession().getAttribute("idx").toString();
+		pictVO.setIdx(Integer.parseInt(idx));
+		pictVO = pictService.get_person_info(pictVO);
+		model.addAttribute("pictVO", pictVO);
 		
 		return "pict/main/mypage";
 	}
@@ -450,32 +455,54 @@ public class pictController {
 	//버스입장 QR체크 페이지
 	@RequestMapping(value = "/admin/intro_bus.do")
 	public String intro_bus(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
-		String idx = request.getSession().getAttribute("idx").toString();
-		pictVO.setIdx(Integer.parseInt(idx));
-		pictVO = pictService.get_person_info(pictVO);
-		model.addAttribute("pictVO", pictVO);
 		
-		return "pict/admin/bus_list";
+		
+		return "pict/admin/tabpath";
 	}
 	@RequestMapping(value = "/qr_insert.do", method= RequestMethod.POST)
 	@ResponseBody
-	public String user_invest_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
-		
+	public HashMap<String, Object> user_invest_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+		HashMap<String, Object> map = new HashMap<String, Object>();	
 		String idx = param.get("idx").toString();
 		pictVO.setIdx(Integer.parseInt(idx));
 		
 		pictVO = pictService.get_person_info(pictVO);
 		
 		//이러면 이미 좌석정보 들어온 경우
-		if(pictVO != null && pictVO.getBus() != null && pictVO.getSeat() != null) {
-			return "already";
+		if(pictVO != null && pictVO.getBus() != null && pictVO.getSeat() != null && !pictVO.getBus().equals("") && !pictVO.getSeat().equals("")) {
+			pictVO.setIdx(Integer.parseInt(idx));
+			pictVO = pictService.get_person_info(pictVO);
+			
+			map.put("text", "already");
+			map.put("rst", pictVO);
+			return map;
 		}
 		else {
 			pictVO = pictService.get_seat_info(pictVO);
-			int bus = Integer.parseInt(pictVO.getBus());
-			int seat = Integer.parseInt(pictVO.getSeat());
+			String busString = pictVO.getBus();
+			int bus;
+			if (busString == null || busString.trim().isEmpty()) {
+			    // 공란인 경우 기본값 설정 (예: 0)
+			    bus = 0; 
+			} else {
+				bus = Integer.parseInt(busString);
+			}
+			
+			String busString2 = pictVO.getSeat();
+			int seat;
+			if (busString2 == null || busString2.trim().isEmpty()) {
+			    // 공란인 경우 기본값 설정 (예: 0)
+				seat = 0; 
+			} else {
+				seat = Integer.parseInt(busString2);
+			}
+			
 			int target_bus = 0;
 			int target_seat = 0;
+			
+			if(bus == 0) {
+				bus = 1;
+			}
 			
 			if(seat == 45) {
 				target_bus = bus + 1;
@@ -485,12 +512,19 @@ public class pictController {
 				target_bus = bus;
 				target_seat = seat + 1;
 			}
+			
+			
 			pictVO.setIdx(Integer.parseInt(idx));
 			pictVO.setBus(target_bus+"");
 			pictVO.setSeat(target_seat+"");
 			pictService.update_user_bus_info(pictVO);
 			
-			return target_bus+"@@"+target_seat;
+			pictVO.setIdx(Integer.parseInt(idx));
+			pictVO = pictService.get_person_info(pictVO);
+			
+			map.put("text", "success");
+			map.put("rst", pictVO);
+			return map;
 		}
 		
 	}

@@ -15,7 +15,7 @@
 <c:set var="bus_list" value="${fn:indexOf(url, 'bus_list')}"/>
 <c:set var="user_list" value="${fn:indexOf(url, 'user_list')}"/>
 <c:set var="user_register" value="${fn:indexOf(url, 'user_register')}"/>
-
+<c:set var="intro_bus" value="${fn:indexOf(url, 'intro_bus')}"/>
 
 
 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
@@ -43,6 +43,11 @@
             <div class="collapse" id="collapseLayouts1" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                 <nav class="sb-sidenav-menu-nested nav">
                     <a class="nav-link" href="/admin/user_list.do" style="<c:if test="${user_list ne -1}">font-weight:700; color:#000</c:if>">사용자 리스트</a>
+                </nav>
+            </div>
+            <div class="collapse" id="collapseLayouts1" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <nav class="sb-sidenav-menu-nested nav">
+                    <a class="nav-link" href="/admin/intro_bus.do" style="<c:if test="${intro_bus ne -1}">font-weight:700; color:#000</c:if>">TABPATH</a>
                 </nav>
             </div>
 	            
