@@ -110,7 +110,7 @@
 
 	<div class="login-wrapper">
 	    <div class="login-wrap">
-        	<h1 class="login-title"><img src="/images/pict/cc-logo.png" alt="영수증콘서트" style="width:100%"></h1>
+        	<h1 class="login-title"><img src="/user_img/logo.png" alt="영수증콘서트" style="width:100%"></h1>
 	        <div class="login-box">
 		        <form action="#" id="entryForm" name="entryForm" method="post">
 	                <div class="login-inner">

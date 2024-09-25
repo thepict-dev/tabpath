@@ -122,6 +122,8 @@ public interface PictMapper {
 
 	void register_cancel(PictVO pictVO) throws Exception;
 
+	PictVO get_person_info_fairpass(PictVO pictVO) throws Exception;
+
 
 
 

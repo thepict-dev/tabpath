@@ -282,6 +282,11 @@
 		select * from user_table where idx = #{idx}
 	</select>
 	
+	<select id="get_person_info_fairpass" resultType="pictVO">
+		select * from user_table where fairpath_id = #{idx}
+	</select>
+	
+	
 	<select id="get_seat_info" resultType="pictVO">
 		select * 
 		from user_table
@@ -292,7 +297,7 @@
 	<update id="update_user_bus_info" parameterType="pictVO">
 		update user_table
 		set bus = #{bus}, seat = #{seat}
-		where idx= #{idx}
+		where fairpath_id= #{idx}
 	</update>
 	
 	<select id="bus_list" resultType="pictVO">

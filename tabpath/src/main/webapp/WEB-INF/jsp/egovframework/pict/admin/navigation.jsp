@@ -8,7 +8,7 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <h1 class="header-logo">
     	<a class="navbar-brand ps-3" href="/pict_main.do">
-    		<img src="/images/pict/cc-logo.png" alt="영수증콘서트" style="position:relative; left:10px; width:95%">
+    		<img src="/user_img/logo.png" alt="영수증콘서트" style="position:relative; left:10px; width:95%">
    		</a>
 	</h1>
     <div class="header-info">

@@ -523,7 +523,7 @@ public class pictController {
 				pictVO.setLocation(location);
 				pictService.sms_update(pictVO);
 				
-				String msg = "가보고 싶은 두타연 : 금강산 가는 옛길 걷기 참가자 모집 행사에 참가확정 되었습니다.\n마이페이지 URL : https://www.tabpath.co.kr/mypage_login.do";
+				String msg = "가보고 싶은 두타연 : 금강산 가는 옛길 걷기 참가자 모집 행사에 참가확정 되었습니다.\n마이페이지 URL : https://www.tappass.co.kr/mypage_login.do";
 				System.out.println(msg);
 				System.out.println(mobile);
 				model.addAttribute("msg", msg);
@@ -568,12 +568,12 @@ public class pictController {
 		String idx = param.get("idx").toString();
 		pictVO.setIdx(Integer.parseInt(idx));
 		
-		pictVO = pictService.get_person_info(pictVO);
+		pictVO = pictService.get_person_info_fairpass(pictVO);
 		
 		//이러면 이미 좌석정보 들어온 경우
 		if(pictVO != null && pictVO.getBus() != null && pictVO.getSeat() != null && !pictVO.getBus().equals("") && !pictVO.getSeat().equals("")) {
 			pictVO.setIdx(Integer.parseInt(idx));
-			pictVO = pictService.get_person_info(pictVO);
+			pictVO = pictService.get_person_info_fairpass(pictVO);
 			
 			map.put("text", "already");
 			map.put("rst", pictVO);
@@ -622,7 +622,7 @@ public class pictController {
 			pictService.update_user_bus_info(pictVO);
 			
 			pictVO.setIdx(Integer.parseInt(idx));
-			pictVO = pictService.get_person_info(pictVO);
+			pictVO = pictService.get_person_info_fairpass(pictVO);
 			
 			map.put("text", "success");
 			map.put("rst", pictVO);

@@ -294,6 +294,12 @@ public class PictServiceImpl extends EgovAbstractServiceImpl implements PictServ
 		pictMapper.register_cancel(pictVO);
 	}
 
+	@Override
+	public PictVO get_person_info_fairpass(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		return pictMapper.get_person_info_fairpass(pictVO);
+	}
+
 
 
 	
