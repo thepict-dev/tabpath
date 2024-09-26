@@ -626,7 +626,62 @@ public class pictController {
 			
 			map.put("text", "success");
 			map.put("rst", pictVO);
-			return map;
+			
+			URL url = new URL("https://api.fairpass.co.kr/fsApi/VisitorUpdate");
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			
+			conn.setRequestMethod("POST"); // http 메서드
+			conn.setRequestProperty("Content-Type", "application/json"); // header Content-Type 정보
+			conn.setRequestProperty("ApiKey", " rioE2lpgWGInf2Gd7XF9cOCDvqXGUzKXYPrqBCW"); // header의 auth 정보
+			
+			conn.setDoInput(true); // 서버에 전달할 값이 있다면 true
+			conn.setDoOutput(true);// 서버에서 받을 값이 있다면 true
+			
+			JSONObject obj_param = new JSONObject();
+			obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
+			obj_param.put("VISITOR_IDX", pictVO.getFairpath_id());
+			
+			String bus_info = "";
+			bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat();
+
+			String gender = "1";
+			if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
+			
+			obj_param.put("NAME", pictVO.getName());
+			obj_param.put("TEL", pictVO.getMobile());
+			obj_param.put("GENDER", gender);
+			obj_param.put("INFO9", bus_info);
+			obj_param.put("INFO10", pictVO.getBirthday());
+
+			obj_param.put("OPTION_IDX", "5019");
+
+			//서버에 데이터 전달
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+			bw.write(obj_param.toString()); // 버퍼에 담기
+			bw.flush(); // 버퍼에 담긴 데이터 전달
+			bw.close();
+			
+			// 서버로부터 데이터 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			
+			while((line = br.readLine()) != null) { // 읽을 수 있을 때 까지 반복
+				sb.append(line);
+			}
+			JSONObject obj = new JSONObject(sb.toString()); // json으로 변경 (역직렬화)
+			System.out.println(obj);
+			int state_code = obj.getInt("resultCode");
+			
+			if(state_code != 0) {
+				map.put("text", "error");
+				return map;
+			}
+			else {
+				map.put("text", "success");
+				return map;
+			}
+		
 		}
 		
 	}
