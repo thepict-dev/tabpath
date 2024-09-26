@@ -28,8 +28,10 @@
 							    <div class="search-form">
 							    	<form action="" id="search_fm" name="search_fm" method="get" class="search-box">
 								    	<select id="bus" name="bus" style="width:250px; margin-left:65px" class="input opt-max-width-500">
-											<option value="1" <c:if test="${pictVO.bus eq '1'}">selected</c:if>>1호차</option>
-	                    					<option value="2" <c:if test="${pictVO.bus eq '2'}">selected</c:if>>2호차</option>
+								    		<c:forEach var="item" begin="1" end="45" step="1" varStatus="status">
+												<option value="${status.index}" <c:if test="${pictVO.bus eq item}">selected</c:if>>${status.index}호차</option>
+											</c:forEach>
+	                    					
 										</select>
 								    	
 							    	</form>
