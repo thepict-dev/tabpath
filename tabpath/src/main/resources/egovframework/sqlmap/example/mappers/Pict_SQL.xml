@@ -253,7 +253,7 @@
 			 name, mobile, birthday_1, birthday, reg_date, bus, seat, sms_rand, use_at, fairpath_id, location, boarding
 			)
 		VALUES (
-			 #{name}, #{mobile}, #{birthday_1}, #{birthday}, now(), #{bus}, #{seat}, #{sms_rand}, 'Y', #{fairpath_id}, #{location}, #{boarding}
+			 #{name}, #{mobile}, #{birthday_1}, #{birthday}, now(), '', '', #{sms_rand}, 'Y', #{fairpath_id}, #{location}, #{boarding}
 			  ) 
 	</insert>
 	
@@ -275,7 +275,7 @@
 	</delete>
 	
 	<select id="get_register_person_info" resultType="pictVO">
-		select * from user_table where name = #{name} and mobile =#{mobile} and verify = 'Y'
+		select * from user_table where name = #{name} and mobile =#{mobile} and verify = 'Y' limit 1 offset 0
 	</select>
 	
 	<select id="get_person_info" resultType="pictVO">
