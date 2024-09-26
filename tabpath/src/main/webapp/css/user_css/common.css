@@ -114,6 +114,8 @@ button{
 input{
     box-sizing: border-box;
     font-family: var(--fn-suit);
+   -webkit-appearance: none;
+   -webkit-border-radius: 0;
 }
 .inputCaption{
     margin-bottom: 6px;
