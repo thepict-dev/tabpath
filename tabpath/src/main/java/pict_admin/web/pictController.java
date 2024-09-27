@@ -269,16 +269,33 @@ public class pictController {
 	
 	@RequestMapping(value = "/admin/user_list.do")
 	public String user_list(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
-		String userAgent = request.getHeader("user-agent");
-		boolean mobile1 = userAgent.matches( ".*(iPhone|iPod|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mini|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson).*");
-		boolean mobile2 = userAgent.matches(".*(LG|SAMSUNG|Samsung).*"); 
-		if (mobile1 || mobile2) {
-		    //여기 모바일일 경우
-			model.addAttribute("intype", "mobile");
-		}
-		else {
-			model.addAttribute("intype", "pc");
-		}
+		
+		int limitNumber = 20;
+        pictVO.setLimit_cnt(limitNumber);
+        Integer pageNum = Integer.valueOf(pictVO.getPageNumber());
+        if (pageNum.intValue() == 0) {
+          pictVO.setPageNumber(1);
+          pageNum = Integer.valueOf(1);
+        } 
+        int startNum = (pageNum.intValue() - 1) * limitNumber;
+        pictVO.setStartNumber(startNum);
+        Integer totalCnt = this.pictService.user_list_cnt(pictVO);
+        int lastPageValue = (int)Math.ceil(totalCnt.intValue() * 1.0D / 20.0D);
+        pictVO.setLastPage(lastPageValue);
+        Integer s_page = Integer.valueOf(pageNum.intValue() - 4);
+        Integer e_page = Integer.valueOf(pageNum.intValue() + 5);
+        if (s_page.intValue() <= 0) {
+          s_page = Integer.valueOf(1);
+          e_page = Integer.valueOf(10);
+        } 
+        if (e_page.intValue() > lastPageValue)
+          e_page = Integer.valueOf(lastPageValue); 
+        pictVO.setStartPage(s_page.intValue());
+        pictVO.setEndPage(e_page.intValue());
+        model.addAttribute("pictVO", pictVO);
+        model.addAttribute("board_cnt", totalCnt);
+
+		
 		List<?> board_list = pictService.user_list(pictVO);
 		model.addAttribute("resultList", board_list);
 		model.addAttribute("pictVO", pictVO);
@@ -287,6 +304,8 @@ public class pictController {
 	}
 	@RequestMapping(value = "/admin/user_register.do")
 	public String user_register(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request) throws Exception {
+		
+		
 		if(pictVO.getIdx() != 0) {
 			//수정
 			pictVO = pictService.user_list_one(pictVO);
@@ -320,7 +339,7 @@ public class pictController {
 				obj_param.put("VISITOR_IDX", pictVO.getFairpath_id());
 				
 				String bus_info = "";
-				bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat();
+				bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat() + "번";
 				
 				String gender = "1";
 				if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
@@ -523,7 +542,12 @@ public class pictController {
 				pictVO.setLocation(location);
 				pictService.sms_update(pictVO);
 				
-				String msg = "가보고 싶은 두타연 : 금강산 가는 옛길 걷기 참가자 모집 행사에 참가확정 되었습니다.\n마이페이지 URL : https://www.tappass.co.kr/mypage_login.do";
+				String msg = "[금강산 가는 옛길 걷기 행사]\n금강산 가는 옛길 걷기 행사를 신청해 주셔서 감사합니다.\n"
+						+ "본 행사일은 10월 9일(수) 이며, 행사당일 신분증 지참 후, 발권을 진행하셔야 합니다.\n"
+						+ "행사 전 발권 및 집결장소에 관련된 자세한 안내를 다시 드리도록 하겠습니다.\n"
+						+ "신청자 수가 많을 경우, 신청 순에 따라 탑승장소가 변경될 수 있습니다.\n"
+						+ "감사합니다.\n"
+						+ "문의 : 양구문화재단 033-481-9178";
 				System.out.println(msg);
 				System.out.println(mobile);
 				model.addAttribute("msg", msg);
@@ -594,7 +618,7 @@ public class pictController {
 			int seat;
 			if (busString2 == null || busString2.trim().isEmpty()) {
 			    // 공란인 경우 기본값 설정 (예: 0)
-				seat = 0; 
+				seat = 2; 
 			} else {
 				seat = Integer.parseInt(busString2);
 			}
@@ -606,81 +630,90 @@ public class pictController {
 				bus = 1;
 			}
 			
-			if(seat == 45) {
+			if(seat == 42) {
 				target_bus = bus + 1;
-				target_seat = 1;
+				target_seat = 3;
 			}
 			else {
 				target_bus = bus;
 				target_seat = seat + 1;
 			}
 			
-			
-			pictVO.setIdx(Integer.parseInt(idx));
-			pictVO.setBus(target_bus+"");
-			pictVO.setSeat(target_seat+"");
-			pictService.update_user_bus_info(pictVO);
-			
-			pictVO.setIdx(Integer.parseInt(idx));
-			pictVO = pictService.get_person_info_fairpass(pictVO);
-			
-			map.put("text", "success");
-			map.put("rst", pictVO);
-			
-			URL url = new URL("https://api.fairpass.co.kr/fsApi/VisitorUpdate");
-			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-			
-			conn.setRequestMethod("POST"); // http 메서드
-			conn.setRequestProperty("Content-Type", "application/json"); // header Content-Type 정보
-			conn.setRequestProperty("ApiKey", " rioE2lpgWGInf2Gd7XF9cOCDvqXGUzKXYPrqBCW"); // header의 auth 정보
-			
-			conn.setDoInput(true); // 서버에 전달할 값이 있다면 true
-			conn.setDoOutput(true);// 서버에서 받을 값이 있다면 true
-			
-			JSONObject obj_param = new JSONObject();
-			obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
-			obj_param.put("VISITOR_IDX", pictVO.getFairpath_id());
-			
-			String bus_info = "";
-			bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat();
-
-			String gender = "1";
-			if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
-			
-			obj_param.put("NAME", pictVO.getName());
-			obj_param.put("TEL", pictVO.getMobile());
-			obj_param.put("GENDER", gender);
-			obj_param.put("INFO9", bus_info);
-			obj_param.put("INFO10", pictVO.getBirthday());
-
-			obj_param.put("OPTION_IDX", "5019");
-
-			//서버에 데이터 전달
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-			bw.write(obj_param.toString()); // 버퍼에 담기
-			bw.flush(); // 버퍼에 담긴 데이터 전달
-			bw.close();
-			
-			// 서버로부터 데이터 읽어오기
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			
-			while((line = br.readLine()) != null) { // 읽을 수 있을 때 까지 반복
-				sb.append(line);
-			}
-			JSONObject obj = new JSONObject(sb.toString()); // json으로 변경 (역직렬화)
-			System.out.println(obj);
-			int state_code = obj.getInt("resultCode");
-			
-			if(state_code != 0) {
-				map.put("text", "error");
+			if(target_bus == 41 && target_seat == 3) {
+				System.out.println("배정된 버스가 다 끝났을경우");
+				map.put("text", "max");
 				return map;
 			}
 			else {
+				pictVO.setIdx(Integer.parseInt(idx));
+				pictVO.setBus(target_bus+"");
+				pictVO.setSeat(target_seat+"");
+				pictService.update_user_bus_info(pictVO);
+				
+				pictVO.setIdx(Integer.parseInt(idx));
+				pictVO = pictService.get_person_info_fairpass(pictVO);
+				
 				map.put("text", "success");
-				return map;
+				map.put("rst", pictVO);
+				
+				URL url = new URL("https://api.fairpass.co.kr/fsApi/VisitorUpdate");
+				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+				
+				conn.setRequestMethod("POST"); // http 메서드
+				conn.setRequestProperty("Content-Type", "application/json"); // header Content-Type 정보
+				conn.setRequestProperty("ApiKey", " rioE2lpgWGInf2Gd7XF9cOCDvqXGUzKXYPrqBCW"); // header의 auth 정보
+				
+				conn.setDoInput(true); // 서버에 전달할 값이 있다면 true
+				conn.setDoOutput(true);// 서버에서 받을 값이 있다면 true
+				
+				JSONObject obj_param = new JSONObject();
+				obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
+				obj_param.put("VISITOR_IDX", pictVO.getFairpath_id());
+				
+				String bus_info = "";
+				bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat() + "번";
+
+				String gender = "1";
+				if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
+				
+				obj_param.put("NAME", pictVO.getName());
+				obj_param.put("TEL", pictVO.getMobile());
+				obj_param.put("GENDER", gender);
+				obj_param.put("INFO9", bus_info);
+				obj_param.put("INFO10", pictVO.getBirthday());
+
+				obj_param.put("OPTION_IDX", "5019");
+
+				//서버에 데이터 전달
+				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+				bw.write(obj_param.toString()); // 버퍼에 담기
+				bw.flush(); // 버퍼에 담긴 데이터 전달
+				bw.close();
+				
+				// 서버로부터 데이터 읽어오기
+				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				StringBuilder sb = new StringBuilder();
+				String line = null;
+				
+				while((line = br.readLine()) != null) { // 읽을 수 있을 때 까지 반복
+					sb.append(line);
+				}
+				JSONObject obj = new JSONObject(sb.toString()); // json으로 변경 (역직렬화)
+				System.out.println(obj);
+				int state_code = obj.getInt("resultCode");
+				
+				if(state_code != 0) {
+					map.put("text", "error");
+					return map;
+				}
+				else {
+					map.put("text", "success");
+					return map;
+				}
 			}
+			
+			
+			
 		
 		}
 		

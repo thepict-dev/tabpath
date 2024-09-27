@@ -240,7 +240,22 @@
 			) 
 		</if>
 		order by reg_date desc
+		LIMIT #{limit_cnt} OFFSET #{startNumber}
 	</select>
+	
+	
+	<select id="user_list_cnt" resultType="int">
+		select count(idx) from user_table
+		<if test="search_text != null and search_text != '' ">
+			where (
+				name LIKE CONCAT('%', #{search_text}, '%') or
+				mobile LIKE CONCAT('%', #{search_text}, '%')
+			) 
+		</if>
+	</select>
+	
+	
+	
 	
 	<select id="user_list_one" resultType="pictVO">
 		select * from user_table

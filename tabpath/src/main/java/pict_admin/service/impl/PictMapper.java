@@ -124,6 +124,8 @@ public interface PictMapper {
 
 	PictVO get_person_info_fairpass(PictVO pictVO) throws Exception;
 
+	Integer user_list_cnt(PictVO pictVO) throws Exception;
+
 
 
 

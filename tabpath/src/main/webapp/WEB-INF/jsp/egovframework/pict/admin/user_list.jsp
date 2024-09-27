@@ -11,6 +11,46 @@
 	<c:import url="../admin/header.jsp">
     	<c:param name="pageTitle" value="사용자 리스트"/>
     </c:import>
+    <style type="text/css">
+		.paginations{
+		    display: flex;
+   			justify-content: center;
+		    column-gap: 5px;
+		    width: 100%;
+		    max-width: 513px;
+		    margin: 0 auto;
+		    padding: 25px 0 30px 0;
+		}
+		.paginations li{
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    width: 32px;
+		    height: 32px;
+		    border-radius: 8px;
+		    border: 1px solid #F1F1F1;
+		    font-size: 13px;
+		    font-weight: 600;
+		    font-family: var(--fn-open);
+		}
+		.paginations li.cut{
+		    border: 0;
+		}
+		.paginations li a{
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    width: 100%;
+		    height: 100%;
+		    color: #333;
+		    border-radius: 8px;
+		    text-decoration: none;
+		}
+		.paginations li.active a{
+		    color: #fff;
+		    background-color: #0575E6;
+		}
+	</style>
     <body class="sb-nav-fixed">
         <%@include file="./navigation.jsp" %>
         <div id="layoutSidenav">
@@ -59,7 +99,14 @@
 							            <tbody>
 								            <c:forEach var="resultList" items="${resultList}" varStatus="status">
 								                <tr>
-							                    	<td>${status.count}</td>
+							                    	
+						                    		<c:if test="${pictVO.pageNumber eq 1}">
+														<td>${board_cnt - status.index}</td>					
+													</c:if>
+													<c:if test="${pictVO.pageNumber ne 1}">
+														<td>${board_cnt - (status.index +  ((pictVO.pageNumber - 1) * 20))}</td>
+													</c:if>
+													
 							                    	<td class="opt-tl"><a href="javascript:void(0);" onclick="board_mod('${resultList.idx}');" class="link">${resultList.name}</a></td>
 							                    	<td>${resultList.mobile}</td>
 							                    	<td>${resultList.birthday}</td>
@@ -90,6 +137,26 @@
 						            </table>
 				            	</div>
 				            </div>
+				            <ul class="paginations">
+								<c:if test="${pictVO.pageNumber ne 1}">
+									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=1"><img src="/img/First.png" alt=""></a></li>
+									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=${pictVO.pageNumber - 10 < 1 ? 1 : pictVO.pageNumber - 10}"><img src="/img/Prev.png" alt=""></a></li>
+								</c:if>	
+							
+								<c:forEach var="i" begin="${pictVO.startPage}" end="${pictVO.endPage}">
+									<c:if test="${i eq pictVO.pageNumber}">
+										<li class="active"><a href="/user_list.do?search_text=${pictVO.search_text}&pageNumber=${i}" >${i}</a></li>
+									</c:if>
+									<c:if test="${i ne pictVO.pageNumber}">
+										<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=${i}" >${i}</a></li>
+									</c:if>
+								</c:forEach>	
+						
+								<c:if test="${pictVO.lastPage ne pictVO.pageNumber}">
+									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=${pictVO.pageNumber + 10 > pictVO.lastPage ?  pictVO.lastPage : pictVO.pageNumber + 10}"><img src="/img/Next.png" alt=""></a></li>
+									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=${pictVO.lastPage}"><img src="/img/Last.png" alt=""></a></li>
+								</c:if>
+							</ul>
 			            </div>
 		            </div>
 				</main>

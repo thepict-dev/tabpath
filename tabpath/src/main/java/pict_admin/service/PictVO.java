@@ -120,8 +120,58 @@ public class PictVO extends PictDefaultVO {
 	private String phone;
 	private String boarding;
 	private String location;
+	private int pageNumber;
+	private int startNumber;
+	private int totalPage;
+	private int lastPage;
+	private int startPage;
+	private int endPage;
+	private int limit_cnt;
 	
 	
+	
+	public int getPageNumber() {
+		return pageNumber;
+	}
+	public void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
+	}
+	public int getStartNumber() {
+		return startNumber;
+	}
+	public void setStartNumber(int startNumber) {
+		this.startNumber = startNumber;
+	}
+	public int getTotalPage() {
+		return totalPage;
+	}
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
+	}
+	public int getLastPage() {
+		return lastPage;
+	}
+	public void setLastPage(int lastPage) {
+		this.lastPage = lastPage;
+	}
+	public int getStartPage() {
+		return startPage;
+	}
+	public void setStartPage(int startPage) {
+		this.startPage = startPage;
+	}
+	public int getEndPage() {
+		return endPage;
+	}
+	public void setEndPage(int endPage) {
+		this.endPage = endPage;
+	}
+	public int getLimit_cnt() {
+		return limit_cnt;
+	}
+	public void setLimit_cnt(int limit_cnt) {
+		this.limit_cnt = limit_cnt;
+	}
 	public String getBoarding() {
 		return boarding;
 	}

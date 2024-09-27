@@ -111,6 +111,9 @@
 							$('#bus').text(result.rst.bus + "호차")
 							$('#seat').text(result.rst.seat + "번")
 						}
+						else if(result.text == "max"){
+							alert("준비된 버스의 배차가 완료되었습니다.");
+						}
 						else{
 							alert("오류가 발생했습니다.\n관리자에게 문의해주세요");
 							window.location.reload(true);
