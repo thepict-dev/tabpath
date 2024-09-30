@@ -107,12 +107,15 @@
 		                    page-break-inside: auto;
 		                }
 		                tr { page-break-inside: avoid; page-break-after: auto; }
-		                th, td {
-		                    border: 1px solid black;
-		                    padding: 4px;
-		                    text-align: left;
-		                    word-break: break-all;
+		                .tbl-basic .thead th, .tbl-basic .thead td {
+		                    padding: 4px 15px;
+		                    color: #000;
+		                    font-weight: 500;
 		                }
+		                .tbl-basic th, .tbl-basic td {
+		                    padding: 4px 15px;
+			                color: #000;
+			            }
 		                thead { display: table-header-group; }
 		                .tbl-basic { overflow-x: hidden; }
 		            }
