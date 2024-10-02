@@ -41,6 +41,20 @@
 	                    <span>행사당일사용</span>
 	                </div>
 	            </div>
+	            <div class="cancelContainer">
+                    <a href="#lnk">참여취소</a>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="cancelModal">
+	        <div class="cancelInner">
+	            <p>참여 취소</p>
+	            <span>행사 참여를 취소하시겠어요?<br>
+	                취소시 재등록은 불가해요.</span>
+	            <div class="buttonContainer">
+	                <a href="#lnk" class="wt close">닫기</a>
+	                <a href="#lnk" class="bl my" onclick="fn_cancel('${pictVO.idx}')">참여 취소</a>
+	            </div>
 	        </div>
 	    </div>
 
@@ -51,6 +65,15 @@
 		    		text: idx        
 		    	});
 			});
+	    	function fn_cancel(idx){
+	    		$('#idx').val(idx)
+	    		var text = "참가등록을 취소하시겠습니까?";
+
+				if (confirm(text)) {
+					$("#register").attr("action", "/register_cancel.do");
+					$("#register").submit();
+				}
+	    	}
 	        $('.cancelContainer a').click(function(){
 	            $('.cancelModal').addClass('active');
 	        });
@@ -75,27 +98,6 @@
 	    
 	        $(window).on('resize', adjustAnimation);
 	
-	
-	        const $qrContainer = $('.qrContainer');
-	        const $cancelContainer = $('.cancelContainer');
-	        const $cancelLink = $('.cancelContainer a');
-	
-	        $qrContainer.on('click', function(e) {
-	            if (!$(e.target).closest('.cancelContainer').length) {
-	                $cancelContainer.addClass('active');
-	            }
-	        });
-	
-	        $(document).on('click', function(e) {
-	            if (!$(e.target).closest('.qrContainer').length || 
-	                ($(e.target).closest('.cancelContainer').length && !$(e.target).closest('a').length)) {
-	                $cancelContainer.removeClass('active');
-	            }
-	        });
-	
-	        $cancelLink.on('click', function(e) {
-	            e.stopPropagation();
-	        });
 	    </script>
     </body>
 </html>
