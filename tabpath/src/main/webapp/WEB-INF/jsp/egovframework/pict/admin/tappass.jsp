@@ -26,9 +26,16 @@
 						<div class="card">
 						    <div class="card-body">
 							    <div class="search-form" style="justify-content: flex-start">
-							    	<form action="" id="search_fm" name="search_fm" method="get" class="search-box">
-								    	<input type="text" id="search_idx" name="search_idx" value="${pictVO.search_idx}" class="input" placeholder="바코드를 인식해주세요." autocomplete="off" onkeypress="if(event.keyCode == 13){search();return false;}">
-								    	<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+							    	<form action="" id="search_fm" name="search_fm" method="get" class="search-box" style="max-width:650px">
+							    		<div style="position:relative">
+									    	<input type="text" id="search_idx" name="search_idx" value="${pictVO.search_idx}" class="input" placeholder="바코드를 인식해주세요." autocomplete="off" onkeypress="if(event.keyCode == 13){search();return false;}">
+									    	<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+								    	</div>
+								    	<select id="bus" name="bus" style="width:250px; margin-left:65px" class="input opt-max-width-500">
+								    		<c:forEach var="item" begin="1" end="45" step="1" varStatus="status">
+												<option value="${status.index}" >${status.index}호차</option>
+											</c:forEach>
+										</select>
 							    	</form>
 							    </div>
 							    <div class="passContainer">
@@ -51,7 +58,7 @@
 							    		</li>
 							    		<li>
 							    			<p>버스(호차)</p>
-							    			<span id="bus"></span>
+							    			<span id="bus_text"></span>
 							    		</li>
 							    		<li>
 							    			<p>버스(좌석)</p>
@@ -75,7 +82,8 @@
 			
 			function search(){
 				var param = {
-					idx : $('#search_idx').val()
+					idx : $('#search_idx').val(),
+					bus : $('#bus').val()
 				}
 				
 				$.ajax({
@@ -86,6 +94,7 @@
 					, dataType : "json"
 					, async : false
 					, success : function(result){
+						console.log(result)
 						if(result.text == "already"){
 							alert("이미 버스좌석 배정을 받았습니다.")
 							$('#name').text(result.rst.name)
@@ -96,7 +105,7 @@
 							if(result.rst.birthday_1 == '2') gender ="여"
 							
 							$('#birthday_1').text(gender)
-							$('#bus').text(result.rst.bus + "호차")
+							$('#bus_text').text(result.rst.bus + "호차")
 							$('#seat').text(result.rst.seat + "번")
 						}
 						else if(result.text == "success"){
@@ -108,7 +117,7 @@
 							if(result.rst.birthday_1 == '2') gender ="여"
 							
 							$('#birthday_1').text(gender)
-							$('#bus').text(result.rst.bus + "호차")
+							$('#bus_text').text(result.rst.bus + "호차")
 							$('#seat').text(result.rst.seat + "번")
 						}
 						else if(result.text == "max"){

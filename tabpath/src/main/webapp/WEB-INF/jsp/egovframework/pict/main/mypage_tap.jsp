@@ -57,6 +57,9 @@
 	            </div>
 	        </div>
 	    </div>
+	    <form action="" id="register" name="register" method="post" enctype="multipart/form-data">
+	    	<input type="hidden" id="idx" name="idx"/>
+	    </form>
 
 	    <script>
 		    $( document ).ready(function() {

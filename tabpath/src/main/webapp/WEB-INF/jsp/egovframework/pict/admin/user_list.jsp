@@ -65,6 +65,10 @@
 						<div class="card">
 						    <div class="card-body">
 							    <div class="search-form">
+							    	<div style="margin-right:30px; line-height:40px">
+								    	승인 건수 : ${vo.use_y} / 
+								    	취소 건수 : ${vo.use_c}
+							    	</div>
 							    	<form action="" id="search_fm" name="search_fm" method="get" class="search-box" style="max-width:500px">
 							    		<input type="text" id="search_text" name="search_text" value="${pictVO.search_text}" class="input" placeholder="이름 혹은 연락처로 검색하세요." autocomplete="off" onkeypress="if(event.keyCode == 13){search();}">
 								    	<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>

@@ -125,9 +125,31 @@ public class PictVO extends PictDefaultVO {
 	private int totalPage;
 	private int lastPage;
 	private int startPage;
+	private String use_y;
+	private String use_c;
+	
+	
+	public String getUse_y() {
+		return use_y;
+	}
+	public void setUse_y(String use_y) {
+		this.use_y = use_y;
+	}
+	public String getUse_c() {
+		return use_c;
+	}
+	public void setUse_c(String use_c) {
+		this.use_c = use_c;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	private int endPage;
 	private int limit_cnt;
-	
+	private String status;
 	
 	
 	public int getPageNumber() {

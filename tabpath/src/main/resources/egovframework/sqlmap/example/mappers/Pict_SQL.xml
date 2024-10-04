@@ -278,7 +278,7 @@
 		name =#{name}, mobile=#{mobile},
 		birthday_1 =#{birthday_1}, birthday=#{birthday},
 		bus =#{bus}, seat=#{seat},
-		reg_date = now(), location = #{location}, boarding = #{boarding}
+		update_date = now(), location = #{location}, boarding = #{boarding}
 		<if test="use_at != null and use_at != '' ">
 			, use_at = #{use_at}
 		</if>
@@ -290,7 +290,7 @@
 	</delete>
 	
 	<select id="get_register_person_info" resultType="pictVO">
-		select * from user_table where name = #{name} and mobile =#{mobile} and verify = 'Y' limit 1 offset 0
+		select * from user_table where name = #{name} and mobile =#{mobile} and verify = 'Y' and use_at = 'Y' limit 1 offset 0
 	</select>
 	
 	<select id="get_person_info" resultType="pictVO">
@@ -305,6 +305,10 @@
 	<select id="get_seat_info" resultType="pictVO">
 		select * 
 		from user_table
+		where 1=1
+		<if test="bus != null and bus != '' ">
+			and bus = #{bus}
+		</if>
 		order by cast(bus as unsigned) desc, cast(seat as unsigned) desc
 		limit 1 offset 0
 	</select>
@@ -337,9 +341,23 @@
 	
 	<update id="register_cancel" parameterType="pictVO">
 		update user_table
-		set verify = "C"
+		set use_at = "C", update_date = now()
 		where idx = #{idx}
 	</update>
 	
 	
+	<select id="get_status" resultType="pictVO">
+		select * from status
+		limit 1 offset 0		
+	</select>
+	
+	<select id="user_status_list" resultType="pictVO">
+		SELECT 
+		    COUNT(CASE WHEN use_at = 'Y' THEN 1 END) AS use_y,
+		    COUNT(CASE WHEN use_at = 'C' THEN 1 END) AS use_c
+		FROM 
+		    user_table
+		WHERE 
+		    use_at IN ('Y', 'C');
+	</select>
 </mapper>

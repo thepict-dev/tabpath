@@ -149,6 +149,15 @@
 	    	}
 	    
 	    	$(document).ready(function() {
+	    		var status = "${pictVO.status}"
+        		if(status == 'Y'){
+        			
+        		}
+        		else{
+        			alert("사전접수가 마감되었습니다.\n추가 접수는 10월 2일 오전 10:00부터 진행합니다. ")
+        			window.location.href="/"
+        		}
+	    		
 	    	    const $nameInput = $('#name');
 	    	    const $birthInput = $('#birth');
 	    	    const $genderInput = $('#gender');

@@ -126,6 +126,10 @@ public interface PictMapper {
 
 	Integer user_list_cnt(PictVO pictVO) throws Exception;
 
+	PictVO get_status(PictVO pictVO) throws Exception;
+
+	PictVO user_status_list(PictVO pictVO) throws Exception;
+
 
 
 

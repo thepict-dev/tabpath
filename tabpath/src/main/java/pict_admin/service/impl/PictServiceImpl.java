@@ -306,6 +306,18 @@ public class PictServiceImpl extends EgovAbstractServiceImpl implements PictServ
 		return pictMapper.user_list_cnt(pictVO);
 	}
 
+	@Override
+	public PictVO get_status(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		return pictMapper.get_status(pictVO);
+	}
+
+	@Override
+	public PictVO user_status_list(PictVO pictVO) throws Exception {
+		// TODO Auto-generated method stub
+		return pictMapper.user_status_list(pictVO);
+	}
+
 
 
 	

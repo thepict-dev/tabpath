@@ -141,8 +141,9 @@ public class pictController {
 	}
 	
 	@RequestMapping(value = "/main.do")
-	public String main(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
-		
+	public String main(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		pictVO = pictService.get_status(pictVO);
+		model.addAttribute("pictVO", pictVO);
 		return "pict/main/main";
 	}
 	@RequestMapping(value = "/mypage_login.do")
@@ -159,7 +160,7 @@ public class pictController {
 			System.out.println(formatedNow);
 			
 			//여기 날짜 체크해서 10/7일만 mypage.do 보내고 / 이외에는 mypage_tap.do로 보내
-			if(formatedNow.equals("2024-10-07")) {
+			if(formatedNow.equals("2024-10-01")) {
 				return "redirect:/mypage.do";
 			}
 			else {
@@ -229,6 +230,7 @@ public class pictController {
 		model.addAttribute("pictVO", pictVO);
 		
 		return "pict/main/mypage_tap";
+		
 	}
 	
 	@RequestMapping(value = "/admin/bus_list.do")
@@ -251,8 +253,9 @@ public class pictController {
 	}
 
 	@RequestMapping(value = "/apply.do")
-	public String apply(@ModelAttribute("searchVO") AdminVO adminVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
-		
+	public String apply(@ModelAttribute("searchVO") PictVO pictVO, HttpServletRequest request, ModelMap model, HttpSession session, RedirectAttributes rttr) throws Exception {
+		pictVO = pictService.get_status(pictVO);
+		model.addAttribute("pictVO", pictVO);
 		return "pict/main/apply";
 	}
 	
@@ -299,6 +302,10 @@ public class pictController {
 		List<?> board_list = pictService.user_list(pictVO);
 		model.addAttribute("resultList", board_list);
 		model.addAttribute("pictVO", pictVO);
+		
+		PictVO vo = new PictVO();
+		vo = pictService.user_status_list(pictVO);
+		model.addAttribute("vo", vo);
 		
 		return "pict/admin/user_list";
 	}
@@ -590,6 +597,7 @@ public class pictController {
 	public HashMap<String, Object> user_invest_save(@ModelAttribute("searchVO") PictVO pictVO, ModelMap model, HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();	
 		String idx = param.get("idx").toString();
+		String bus = param.get("bus").toString();
 		pictVO.setIdx(Integer.parseInt(idx));
 		
 		pictVO = pictService.get_person_info_fairpass(pictVO);
@@ -604,17 +612,20 @@ public class pictController {
 			return map;
 		}
 		else {
+			/* 버스 호차는 프론트에서 보내줄거야 그리고 탑승좌석은 3~42번까지 자동으로 붙어야해
+			 * 그리고 최초 버스탑승하는 사람이 이전 최대값을 조회했을때는 당연히 공란으로 나오기때문에 최초좌석은 3으로 설정해야해
+			*/
+			System.out.println(bus+"@@@@@@@@@@@@@@@@@@@@@@@@");
+			pictVO.setBus(bus);
 			pictVO = pictService.get_seat_info(pictVO);
-			String busString = pictVO.getBus();
-			int bus;
-			if (busString == null || busString.trim().isEmpty()) {
-			    // 공란인 경우 기본값 설정 (예: 0)
-			    bus = 0; 
-			} else {
-				bus = Integer.parseInt(busString);
+			
+			PictVO vo = new PictVO();
+			if(pictVO != null) {
+				vo = pictVO;
 			}
 			
-			String busString2 = pictVO.getSeat();
+			String busString = bus;
+			String busString2 = vo.getSeat();
 			int seat;
 			if (busString2 == null || busString2.trim().isEmpty()) {
 			    // 공란인 경우 기본값 설정 (예: 0)
@@ -623,38 +634,26 @@ public class pictController {
 				seat = Integer.parseInt(busString2);
 			}
 			
-			int target_bus = 0;
 			int target_seat = 0;
 			
-			if(bus == 0) {
-				bus = 1;
-			}
+			target_seat = seat + 1;
 			
-			if(seat == 42) {
-				target_bus = bus + 1;
-				target_seat = 3;
-			}
-			else {
-				target_bus = bus;
-				target_seat = seat + 1;
-			}
-			
-			if(target_bus == 41 && target_seat == 3) {
+			if(target_seat >= 43) {
 				System.out.println("배정된 버스가 다 끝났을경우");
 				map.put("text", "max");
 				return map;
 			}
 			else {
-				pictVO.setIdx(Integer.parseInt(idx));
-				pictVO.setBus(target_bus+"");
-				pictVO.setSeat(target_seat+"");
-				pictService.update_user_bus_info(pictVO);
+				vo.setIdx(Integer.parseInt(idx));
+				vo.setBus(busString);
+				vo.setSeat(target_seat+"");
+				pictService.update_user_bus_info(vo);
 				
-				pictVO.setIdx(Integer.parseInt(idx));
-				pictVO = pictService.get_person_info_fairpass(pictVO);
+				vo.setIdx(Integer.parseInt(idx));
+				vo = pictService.get_person_info_fairpass(vo);
 				
 				map.put("text", "success");
-				map.put("rst", pictVO);
+				map.put("rst", vo);
 				
 				URL url = new URL("https://api.fairpass.co.kr/fsApi/VisitorUpdate");
 				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -668,19 +667,19 @@ public class pictController {
 				
 				JSONObject obj_param = new JSONObject();
 				obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
-				obj_param.put("VISITOR_IDX", pictVO.getFairpath_id());
+				obj_param.put("VISITOR_IDX", vo.getFairpath_id());
 				
 				String bus_info = "";
-				bus_info = pictVO.getBus() + "호차 " + pictVO.getSeat() + "번";
+				bus_info = vo.getBus() + "호차 " + vo.getSeat() + "번";
 
 				String gender = "1";
-				if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
+				if(vo.getBirthday_1().equals("2") || vo.getBirthday_1().equals("4")) gender = "2";
 				
-				obj_param.put("NAME", pictVO.getName());
-				obj_param.put("TEL", pictVO.getMobile());
+				obj_param.put("NAME", vo.getName());
+				obj_param.put("TEL", vo.getMobile());
 				obj_param.put("GENDER", gender);
 				obj_param.put("INFO9", bus_info);
-				obj_param.put("INFO10", pictVO.getBirthday());
+				obj_param.put("INFO10", vo.getBirthday());
 
 				obj_param.put("OPTION_IDX", "5019");
 
