@@ -75,6 +75,7 @@
 								    		<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
 							    		</div>
 							    		<select id="search_boarding" name="search_boarding" style="width:250px; margin-left:65px" class="input opt-max-width-500">
+											<option value="" <c:if test="${pictVO.search_boarding eq '' || pictVO.search_boarding eq null || pictVO.search_boarding eq undefined}">selected</c:if>>전체</option>
 											<option value="1" <c:if test="${pictVO.search_boarding eq '1'}">selected</c:if>>종합운동장</option>
 											<option value="2" <c:if test="${pictVO.search_boarding eq '2'}">selected</c:if>>국토정중앙면</option>
 											<option value="3" <c:if test="${pictVO.search_boarding eq '3'}">selected</c:if>>동면</option>
