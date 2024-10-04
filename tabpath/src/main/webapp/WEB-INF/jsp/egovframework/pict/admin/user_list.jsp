@@ -69,9 +69,19 @@
 								    	승인 건수 : ${vo.use_y} / 
 								    	취소 건수 : ${vo.use_c}
 							    	</div>
-							    	<form action="" id="search_fm" name="search_fm" method="get" class="search-box" style="max-width:500px">
-							    		<input type="text" id="search_text" name="search_text" value="${pictVO.search_text}" class="input" placeholder="이름 혹은 연락처로 검색하세요." autocomplete="off" onkeypress="if(event.keyCode == 13){search();}">
-								    	<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+							    	<form action="" id="search_fm" name="search_fm" method="get" class="search-box" style="max-width:700px">
+							    		<div style="position : relative">
+								    		<input type="text" id="search_text" name="search_text" value="${pictVO.search_text}" class="input" placeholder="이름 혹은 연락처로 검색하세요." autocomplete="off" onkeypress="if(event.keyCode == 13){search();}" style="margin-left:50px">
+								    		<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+							    		</div>
+							    		<select id="search_boarding" name="search_boarding" style="width:250px; margin-left:65px" class="input opt-max-width-500">
+											<option value="1" <c:if test="${pictVO.search_boarding eq '1'}">selected</c:if>>종합운동장</option>
+											<option value="2" <c:if test="${pictVO.search_boarding eq '2'}">selected</c:if>>국토정중앙면</option>
+											<option value="3" <c:if test="${pictVO.search_boarding eq '3'}">selected</c:if>>동면</option>
+											<option value="4" <c:if test="${pictVO.search_boarding eq '4'}">selected</c:if>>방산</option>
+											<option value="5" <c:if test="${pictVO.search_boarding eq '5'}">selected</c:if>>해안면</option>
+										</select>
+								    	
 							    	</form>
 							    </div>
 						    	<div class="tbl-basic tbl-hover">
@@ -143,22 +153,22 @@
 				            </div>
 				            <ul class="paginations">
 								<c:if test="${pictVO.pageNumber ne 1}">
-									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=1"><img src="/img/First.png" alt=""></a></li>
-									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=${pictVO.pageNumber - 10 < 1 ? 1 : pictVO.pageNumber - 10}"><img src="/img/Prev.png" alt=""></a></li>
+									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&search_boarding=${pictVO.search_boarding}&pageNumber=1"><img src="/img/First.png" alt=""></a></li>
+									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&search_boarding=${pictVO.search_boarding}&pageNumber=${pictVO.pageNumber - 10 < 1 ? 1 : pictVO.pageNumber - 10}"><img src="/img/Prev.png" alt=""></a></li>
 								</c:if>	
 							
 								<c:forEach var="i" begin="${pictVO.startPage}" end="${pictVO.endPage}">
 									<c:if test="${i eq pictVO.pageNumber}">
-										<li class="active"><a href="/user_list.do?search_text=${pictVO.search_text}&pageNumber=${i}" >${i}</a></li>
+										<li class="active"><a href="/user_list.do?search_text=${pictVO.search_text}&search_boarding=${pictVO.search_boarding}&pageNumber=${i}" >${i}</a></li>
 									</c:if>
 									<c:if test="${i ne pictVO.pageNumber}">
-										<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=${i}" >${i}</a></li>
+										<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&search_boarding=${pictVO.search_boarding}&pageNumber=${i}" >${i}</a></li>
 									</c:if>
 								</c:forEach>	
 						
 								<c:if test="${pictVO.lastPage ne pictVO.pageNumber}">
-									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=${pictVO.pageNumber + 10 > pictVO.lastPage ?  pictVO.lastPage : pictVO.pageNumber + 10}"><img src="/img/Next.png" alt=""></a></li>
-									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&pageNumber=${pictVO.lastPage}"><img src="/img/Last.png" alt=""></a></li>
+									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&search_boarding=${pictVO.search_boarding}&pageNumber=${pictVO.pageNumber + 10 > pictVO.lastPage ?  pictVO.lastPage : pictVO.pageNumber + 10}"><img src="/img/Next.png" alt=""></a></li>
+									<li><a href="/admin/user_list.do?search_text=${pictVO.search_text}&search_boarding=${pictVO.search_boarding}&pageNumber=${pictVO.lastPage}"><img src="/img/Last.png" alt=""></a></li>
 								</c:if>
 							</ul>
 			            </div>
@@ -170,7 +180,10 @@
 			</form>
 		</div>
 		<script>
-
+			$('#search_boarding').on('change', function() {
+				$("#search_fm").attr("action", "/admin/user_list.do");
+				$("#search_fm").submit();
+	        });
 			function board_mod(idx){
 				location.href= "/admin/user_register.do?idx="+idx;
 			}		

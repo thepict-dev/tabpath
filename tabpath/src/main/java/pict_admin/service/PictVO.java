@@ -127,8 +127,16 @@ public class PictVO extends PictDefaultVO {
 	private int startPage;
 	private String use_y;
 	private String use_c;
+	private String search_boarding;
 	
 	
+	
+	public String getSearch_boarding() {
+		return search_boarding;
+	}
+	public void setSearch_boarding(String search_boarding) {
+		this.search_boarding = search_boarding;
+	}
 	public String getUse_y() {
 		return use_y;
 	}

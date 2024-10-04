@@ -233,10 +233,16 @@
 	
 	<select id="user_list" resultType="pictVO">
 		select * from user_table
+		where 1=1
 		<if test="search_text != null and search_text != '' ">
-			where (
+			and (
 				name LIKE CONCAT('%', #{search_text}, '%') or
 				mobile LIKE CONCAT('%', #{search_text}, '%')
+			) 
+		</if>
+		<if test="search_boarding != null and search_boarding != '' ">
+			and (
+				boarding = #{search_boarding}
 			) 
 		</if>
 		order by reg_date desc
@@ -246,10 +252,16 @@
 	
 	<select id="user_list_cnt" resultType="int">
 		select count(idx) from user_table
+		where 1=1
 		<if test="search_text != null and search_text != '' ">
-			where (
+			and (
 				name LIKE CONCAT('%', #{search_text}, '%') or
 				mobile LIKE CONCAT('%', #{search_text}, '%')
+			) 
+		</if>
+		<if test="search_boarding != null and search_boarding != '' ">
+			and (
+				boarding = #{search_boarding}
 			) 
 		</if>
 	</select>
