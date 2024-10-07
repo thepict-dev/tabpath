@@ -41,9 +41,11 @@
 	                    <span>행사당일사용</span>
 	                </div>
 	            </div>
+	            <!-- 
 	            <div class="cancelContainer">
                     <a href="#lnk">참여취소</a>
 	            </div>
+	             -->
 	        </div>
 	    </div>
 	    <div class="cancelModal">

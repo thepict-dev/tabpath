@@ -21,9 +21,11 @@
 	            <h2>인증이<br>완료되었습니다</h2>
 	            <div class="qrContainer">
 	                <div class="qrInner" id="qr_img"></div>
+	                <!-- 
 	                <div class="cancelContainer">
 	                    <a href="#lnk">참여취소</a>
 	                </div>
+	                 -->
 	            </div>
 	            <div class="entryContainer">
 	                <div class="entryTexts">
