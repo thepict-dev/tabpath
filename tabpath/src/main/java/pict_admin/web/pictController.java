@@ -346,7 +346,7 @@ public class pictController {
 				obj_param.put("VISITOR_IDX", pictVO.getFairpath_id());
 				
 				String bus_info = "";
-				bus_info = pictVO.getBus() + "번버스   " + pictVO.getSeat() + "번";
+				bus_info = pictVO.getBus() + "번 버스   " + pictVO.getSeat() + "번";
 				
 				String gender = "1";
 				if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
@@ -417,7 +417,7 @@ public class pictController {
 				obj_param.put("EVENT_IDX", "2417");	//행사코드 고정
 				
 				//String bus_info = "";
-				//bus_info = pictVO.getBus() + "번버스   " + pictVO.getSeat();
+				//bus_info = pictVO.getBus() + "번 버스   " + pictVO.getSeat();
 				
 				String gender = "1";
 				if(pictVO.getBirthday_1().equals("2") || pictVO.getBirthday_1().equals("4")) gender = "2";
@@ -670,7 +670,7 @@ public class pictController {
 				obj_param.put("VISITOR_IDX", vo.getFairpath_id());
 				
 				String bus_info = "";
-				bus_info = vo.getBus() + "번버스  " + vo.getSeat() + "번";
+				bus_info = vo.getBus() + "번 버스  " + vo.getSeat() + "번";
 
 				String gender = "1";
 				if(vo.getBirthday_1().equals("2") || vo.getBirthday_1().equals("4")) gender = "2";
