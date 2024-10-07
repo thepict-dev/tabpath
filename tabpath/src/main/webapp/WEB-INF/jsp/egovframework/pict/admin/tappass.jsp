@@ -31,11 +31,13 @@
 									    	<input type="text" id="search_idx" name="search_idx" value="${pictVO.search_idx}" class="input" placeholder="바코드를 인식해주세요." autocomplete="off" onkeypress="if(event.keyCode == 13){search();return false;}">
 									    	<button type="button" onclick="search();" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
 								    	</div>
+								    	<!-- 
 								    	<select id="bus" name="bus" style="width:250px; margin-left:65px" class="input opt-max-width-500">
 								    		<c:forEach var="item" begin="1" end="45" step="1" varStatus="status">
 												<option value="${status.index}" >${status.index}호차</option>
 											</c:forEach>
 										</select>
+										 -->
 							    	</form>
 							    </div>
 							    <div class="passContainer">
@@ -76,15 +78,28 @@
 		</div>
 		<script>
 			$( document ).ready(function() {
+				
+				const url = new URL(window.location.href);
+				const urlParams = url.searchParams;
+				var bus = urlParams.get('bus')
+				if(bus == '' || bus == null || bus == undefined){
+					alert("버스 호차를 선택하지 않았습니다.\n탑승할 버스 파라미터를 추가해주세요.")
+					window.location.href="/admin/intro_bus.do?bus=1"
+				}
 			    $('#search_idx').focus();
 
 			});
 			
 			function search(){
+				const url = new URL(window.location.href);
+				const urlParams = url.searchParams;
+				var bus = urlParams.get('bus')
+				
 				var param = {
 					idx : $('#search_idx').val(),
-					bus : $('#bus').val()
+					bus : bus
 				}
+				
 				
 				$.ajax({
 					url: '/qr_insert.do'
@@ -92,7 +107,7 @@
 					, data : JSON.stringify(param)
 					, contentType : "application/json"
 					, dataType : "json"
-					, async : false
+					, async : true
 					, success : function(result){
 						console.log(result)
 						if(result.text == "already"){
@@ -119,6 +134,13 @@
 							$('#birthday_1').text(gender)
 							$('#bus_text').text(result.rst.bus + "호차")
 							$('#seat').text(result.rst.seat + "번")
+							
+							setTimeout(function(){
+								alert("정상적으로 배차되었습니다.")
+								window.location.reload()
+							}, 200);
+							
+							
 						}
 						else if(result.text == "max"){
 							alert("준비된 버스의 배차가 완료되었습니다.");
